@@ -89,7 +89,7 @@ export default function ProductPage() {
             </h1>
             <p className="mt-5 text-lg text-ink/60 max-w-2xl mx-auto">
               Praano covers every step from the moment a patient walks in to
-              30 days after they leave — configured to your hospital&apos;s
+              30 days after they leave - configured to your hospital&apos;s
               specific workflows and roles.
             </p>
           </AnimatedSection>

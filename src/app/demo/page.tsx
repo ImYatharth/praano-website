@@ -17,12 +17,12 @@ export default function DemoPage() {
             </h1>
             <p className="mt-4 text-ink/60 max-w-xl mx-auto">
               This is a live prototype. Click any role to explore how Praano
-              works for each department — this is the actual platform, not a
+              works for each department - this is the actual platform, not a
               slide deck.
             </p>
             <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-teal-light rounded-full text-sm text-teal font-medium">
               <MousePointerClick size={16} />
-              Interactive — click through the workflows
+              Interactive - click through the workflows
             </div>
           </AnimatedSection>
         </div>

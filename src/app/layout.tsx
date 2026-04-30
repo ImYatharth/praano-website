@@ -11,11 +11,11 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Praano — AI-Powered Hospital Workflow Automation",
+  title: "Praano - AI-Powered Hospital Workflow Automation",
   description:
     "End-to-end hospital workflow automation from admission to discharge to 30-day follow-up. ABDM, NHCX, PMJAY, NABH compliant.",
   openGraph: {
-    title: "Praano — AI-Powered Hospital Workflow Automation",
+    title: "Praano - AI-Powered Hospital Workflow Automation",
     description:
       "End-to-end hospital workflow automation from admission to discharge to 30-day follow-up.",
     url: "https://praano.co.in",

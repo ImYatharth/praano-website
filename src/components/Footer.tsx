@@ -23,7 +23,7 @@ export default function Footer() {
             </div>
             <p className="text-white/60 text-sm leading-relaxed max-w-xs">
               Seamless hospital process management. AI-powered workflow
-              automation — implemented to fit the way your hospital works.
+              automation - implemented to fit the way your hospital works.
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export default function Footer() {
               Ready to start?
             </h4>
             <p className="text-sm text-white/60 mb-3">
-              Book a 30-minute demo — pick a time that works for you.
+              Book a 30-minute demo - pick a time that works for you.
             </p>
             <a
               href={CALENDLY_URL}

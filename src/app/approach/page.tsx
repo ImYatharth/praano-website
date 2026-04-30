@@ -19,7 +19,7 @@ const phases = [
     icon: Search,
     title: "Discovery",
     duration: "Week 1–2",
-    body: "We spend time inside your hospital — observing workflows, interviewing department heads, and mapping every process that touches the patient journey. We don't start building until we understand how you actually operate.",
+    body: "We spend time inside your hospital - observing workflows, interviewing department heads, and mapping every process that touches the patient journey. We don't start building until we understand how you actually operate.",
   },
   {
     num: "02",
@@ -33,27 +33,27 @@ const phases = [
     icon: Rocket,
     title: "Go-Live",
     duration: "Week 6–8",
-    body: "We run parallel operations during rollout — so nothing breaks while your team gets comfortable. Department-by-department go-live. On-site support throughout. Zero disruption to patient care.",
+    body: "We run parallel operations during rollout - so nothing breaks while your team gets comfortable. Department-by-department go-live. On-site support throughout. Zero disruption to patient care.",
   },
   {
     num: "04",
     icon: HeartHandshake,
     title: "Ongoing Partnership",
     duration: "Month 3+",
-    body: "New departments, regulatory changes, new payer relationships — we stay your technology partner. Quarterly reviews, continuous optimization, and direct access to our clinical and technical team.",
+    body: "New departments, regulatory changes, new payer relationships - we stay your technology partner. Quarterly reviews, continuous optimization, and direct access to our clinical and technical team.",
   },
 ];
 
 const credentials = [
   {
     icon: Stethoscope,
-    title: "Physician-Led Design",
-    body: "Praano was founded by a practicing physician. Every feature has been validated against real clinical workflows — not designed by engineers who've never seen a ward.",
+    title: "physio-Led Design",
+    body: "Praano was founded by a practicing physio. Every feature has been validated against real clinical workflows - not designed by engineers who've never seen a ward.",
   },
   {
     icon: Brain,
     title: "AI That's Actually Useful",
-    body: "Our AI models are trained specifically on hospital operations data. They draft, suggest, and flag — but clinicians always decide. No black boxes. No AI hallucinations in clinical summaries.",
+    body: "Our AI models are trained specifically on hospital operations data. They draft, suggest, and flag - but clinicians always decide. No black boxes. No AI hallucinations in clinical summaries.",
   },
   {
     icon: ShieldCheck,
@@ -82,7 +82,7 @@ export default function ApproachPage() {
             </h1>
             <p className="mt-5 text-lg text-ink/60 max-w-2xl mx-auto">
               Praano is a product accelerator, not a SaaS subscription. Every
-              hospital gets a tailored implementation — built around their
+              hospital gets a tailored implementation - built around their
               workflows, their staff, and their operational reality.
             </p>
           </AnimatedSection>
@@ -99,7 +99,7 @@ export default function ApproachPage() {
               </h2>
               <p className="text-white/70 text-lg leading-relaxed mb-6">
                 Because off-the-shelf hospital software has a 60–70% failure
-                rate. Not because the software is bad — but because no two
+                rate. Not because the software is bad - but because no two
                 hospitals run the same way. A 200-bed general hospital in
                 Nairobi operates nothing like a 50-bed oncology center in Dubai.
               </p>

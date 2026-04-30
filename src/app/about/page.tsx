@@ -12,17 +12,17 @@ const values = [
   {
     icon: Stethoscope,
     title: "Clinical-First Design",
-    body: "Every screen is built by a physician who understands the chaos of a hospital floor. No feature ships without clinical validation.",
+    body: "Every screen is built by a physio who understands the chaos of a hospital floor. No feature ships without clinical validation.",
   },
   {
     icon: Target,
     title: "Outcome Over Output",
-    body: "We measure success by claim approval rates, discharge speed, and patient outcomes — not feature count or lines of code.",
+    body: "We measure success by claim approval rates, discharge speed, and patient outcomes - not feature count or lines of code.",
   },
   {
     icon: Lightbulb,
     title: "AI That Assists, Not Replaces",
-    body: "Our AI drafts, suggests, and automates — but the clinician always decides. Technology should amplify human judgment, not bypass it.",
+    body: "Our AI drafts, suggests, and automates - but the clinician always decides. Technology should amplify human judgment, not bypass it.",
   },
 ];
 
@@ -41,7 +41,7 @@ export default function AboutPage() {
             <p className="mt-5 text-lg text-ink/60 max-w-2xl mx-auto">
               Praano was born from firsthand experience with the broken
               workflows, lost claims, and communication gaps that plague
-              hospitals every day — everywhere.
+              hospitals every day - everywhere.
             </p>
           </AnimatedSection>
         </div>
@@ -65,7 +65,7 @@ export default function AboutPage() {
                       Founder, Praano
                     </p>
                     <p className="text-ink/50 text-sm mt-1">
-                      Physician &middot; Technologist
+                      physio &middot; Technologist
                     </p>
                   </div>
                 </div>
@@ -76,14 +76,14 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-ink/70 leading-relaxed">
                   <p>
-                    As a practicing physician, Dr. Bhagyashree witnessed the
+                    As a practicing physio, Dr. Bhagyashree witnessed the
                     same scene repeat across every hospital she worked in: nurses
                     buried in paperwork instead of caring for patients, insurance
                     claims rejected over coding errors, and critical patient
                     information lost between shift changes.
                   </p>
                   <p>
-                    The problem wasn&apos;t a lack of technology — it was that
+                    The problem wasn&apos;t a lack of technology - it was that
                     existing hospital software was designed by engineers who had
                     never worked a hospital shift. The result was clunky systems
                     that staff worked around rather than with, and workflows that
@@ -91,7 +91,7 @@ export default function AboutPage() {
                   </p>
                   <p>
                     Praano is the system she wished existed. Built from the
-                    clinical floor up, it understands the rhythm of a hospital —
+                    clinical floor up, it understands the rhythm of a hospital -
                     the urgency of admissions, the precision required in
                     discharge summaries, the frustration of chasing insurance
                     approvals. Every feature exists because a real hospital
@@ -99,7 +99,7 @@ export default function AboutPage() {
                   </p>
                   <p>
                     The name &ldquo;Praano&rdquo; comes from the Sanskrit word
-                    for life force — the vital energy that keeps everything
+                    for life force - the vital energy that keeps everything
                     running. That&apos;s what Praano aims to be for hospitals:
                     the invisible infrastructure that keeps operations flowing so
                     clinicians can focus on what matters.
@@ -143,8 +143,8 @@ export default function AboutPage() {
               Our Mission
             </h2>
             <p className="text-xl text-ink/70 leading-relaxed">
-              To give every hospital — from a 20-bed nursing home to a 500-bed
-              multispecialty center — access to the same operational intelligence
+              To give every hospital - from a 20-bed nursing home to a 500-bed
+              multispecialty center - access to the same operational intelligence
               that the best healthcare systems in the world run on. Not through
               expensive consulting or generic software, but through an AI-native
               platform that understands how hospitals actually work, implemented

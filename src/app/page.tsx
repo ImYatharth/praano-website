@@ -110,12 +110,12 @@ const differentiators = [
   {
     icon: Wrench,
     title: "Built for your hospital, not a generic template",
-    body: "Praano is a product accelerator — not a SaaS you log into and figure out. We implement, configure, and customize it to match your specific workflows, departments, and operational quirks.",
+    body: "Praano is a product accelerator - not a SaaS you log into and figure out. We implement, configure, and customize it to match your specific workflows, departments, and operational quirks.",
   },
   {
     icon: Users,
     title: "We work alongside your team",
-    body: "Every engagement is consultative. Our team embeds with yours through implementation, staff training, and go-live — so the system actually gets used, not shelved after onboarding.",
+    body: "Every engagement is consultative. Our team embeds with yours through implementation, staff training, and go-live - so the system actually gets used, not shelved after onboarding.",
   },
   {
     icon: RefreshCw,
@@ -148,7 +148,7 @@ export default function Home() {
             </AnimatedSection>
             <AnimatedSection delay={2}>
               <p className="mt-6 text-lg sm:text-xl text-ink/60 max-w-2xl mx-auto leading-relaxed">
-                From admission to discharge to 30-day follow-up — we implement
+                From admission to discharge to 30-day follow-up - we implement
                 AI-powered workflow automation tailored to how your hospital
                 actually runs.
               </p>
@@ -294,7 +294,7 @@ export default function Home() {
             </h2>
             <p className="mt-4 text-ink/60 max-w-2xl mx-auto">
               Most hospital software is bought, deployed half-heartedly, and
-              abandoned within a year. Praano works differently — because we
+              abandoned within a year. Praano works differently - because we
               implement it alongside you.
             </p>
           </AnimatedSection>

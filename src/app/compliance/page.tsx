@@ -15,35 +15,35 @@ const mandates = [
     code: "ABDM",
     title: "Ayushman Bharat Digital Mission",
     description:
-      "Praano integrates natively with ABDM for Aadhaar-based ABHA ID creation. Every patient gets a unique health ID linked to India's national health records system. Patient records are discoverable and accessible across ABDM-connected facilities, enabling true continuum of care. Praano handles consent management, health record linking, and data sharing — all built into the admission workflow, not bolted on as an afterthought.",
+      "Praano integrates natively with ABDM for Aadhaar-based ABHA ID creation. Every patient gets a unique health ID linked to India's national health records system. Patient records are discoverable and accessible across ABDM-connected facilities, enabling true continuum of care. Praano handles consent management, health record linking, and data sharing - all built into the admission workflow, not bolted on as an afterthought.",
   },
   {
     icon: FileCheck2,
     code: "NHCX",
     title: "National Health Claims Exchange",
     description:
-      "All insurance claims are filed digitally through NHCX, eliminating manual TPA forms and paper-based submissions. Pre-authorization requests are generated automatically at admission. Claim packages are compiled with ICD-10 codes, discharge summaries, and supporting documents — then submitted in one click. This reduces claim rejection rates from the industry average of 18% to under 3%, directly recovering revenue that hospitals lose to paperwork errors.",
+      "All insurance claims are filed digitally through NHCX, eliminating manual TPA forms and paper-based submissions. Pre-authorization requests are generated automatically at admission. Claim packages are compiled with ICD-10 codes, discharge summaries, and supporting documents - then submitted in one click. This reduces claim rejection rates from the industry average of 18% to under 3%, directly recovering revenue that hospitals lose to paperwork errors.",
   },
   {
     icon: Heart,
     code: "PMJAY",
     title: "Pradhan Mantri Jan Arogya Yojana",
     description:
-      "Praano automatically detects PMJAY-eligible patients during registration using Aadhaar-linked verification. Once identified, the system activates the Ayushman Bharat workflow: approved package rates are loaded, pre-auth is filed through NHCX, and billing is constrained to PMJAY guidelines. Hospital staff don't need to manually check eligibility or switch between systems — Praano handles the entire PMJAY pathway natively within the same interface used for all other patients.",
+      "Praano automatically detects PMJAY-eligible patients during registration using Aadhaar-linked verification. Once identified, the system activates the Ayushman Bharat workflow: approved package rates are loaded, pre-auth is filed through NHCX, and billing is constrained to PMJAY guidelines. Hospital staff don't need to manually check eligibility or switch between systems - Praano handles the entire PMJAY pathway natively within the same interface used for all other patients.",
   },
   {
     icon: ClipboardCheck,
     code: "NABH",
     title: "National Accreditation Board for Hospitals",
     description:
-      "Documentation, audit trails, and clinical records in Praano are structured to align with NABH accreditation standards. Every patient interaction — from vitals entry to discharge — is timestamped and traceable. Nursing checklists, handover notes, and clinical summaries follow NABH-compliant templates. When an accreditation audit arrives, hospitals using Praano can generate compliance reports directly from the system, without scrambling to assemble records from paper files or disconnected software.",
+      "Documentation, audit trails, and clinical records in Praano are structured to align with NABH accreditation standards. Every patient interaction - from vitals entry to discharge - is timestamped and traceable. Nursing checklists, handover notes, and clinical summaries follow NABH-compliant templates. When an accreditation audit arrives, hospitals using Praano can generate compliance reports directly from the system, without scrambling to assemble records from paper files or disconnected software.",
   },
   {
     icon: Lock,
     code: "DPDP Act",
     title: "Digital Personal Data Protection Act",
     description:
-      "All patient data in Praano is handled under India's Digital Personal Data Protection framework. This includes consent-based data collection, purpose limitation, data minimization, and secure storage. Patient records are encrypted at rest and in transit. Access is role-based — a billing clerk cannot view clinical notes, and a nurse cannot access financial data. Data retention policies are configurable per hospital, and patients can request data access or deletion in compliance with DPDP provisions.",
+      "All patient data in Praano is handled under India's Digital Personal Data Protection framework. This includes consent-based data collection, purpose limitation, data minimization, and secure storage. Patient records are encrypted at rest and in transit. Access is role-based - a billing clerk cannot view clinical notes, and a nurse cannot access financial data. Data retention policies are configurable per hospital, and patients can request data access or deletion in compliance with DPDP provisions.",
   },
 ];
 
@@ -64,7 +64,7 @@ export default function CompliancePage() {
               <span className="text-teal">Regulatory Standards</span>
             </h1>
             <p className="mt-5 text-lg text-ink/60 max-w-2xl mx-auto">
-              Praano doesn&apos;t bolt on compliance as a feature — it&apos;s
+              Praano doesn&apos;t bolt on compliance as a feature - it&apos;s
               woven into every workflow. From ABDM integration to DPDP data
               protection, every mandate is handled natively.
             </p>
