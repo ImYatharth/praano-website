@@ -215,20 +215,22 @@ export default function Home() {
               Three Steps. Full Automation.
             </h2>
           </AnimatedSection>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-0">
             {steps.map((s, i) => (
-              <AnimatedSection key={s.num} delay={(i + 1) as 1 | 2 | 3} className="relative">
+              <>
+                <AnimatedSection key={s.num} delay={(i + 1) as 1 | 2 | 3} className="flex-1">
+                  <div className="card-hover bg-white rounded-xl p-8 shadow-sm h-full">
+                    <span className="text-4xl font-bold text-teal/20">{s.num}</span>
+                    <h3 className="text-xl font-bold text-ink mt-3 mb-3">{s.title}</h3>
+                    <p className="text-ink/60 text-sm leading-relaxed">{s.body}</p>
+                  </div>
+                </AnimatedSection>
                 {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-12 -right-4 z-10 text-teal/30">
-                    <ArrowRight size={32} />
+                  <div className="hidden lg:flex items-center justify-center w-12 shrink-0 text-teal/25">
+                    <ArrowRight size={28} />
                   </div>
                 )}
-                <div className="card-hover bg-white rounded-xl p-8 shadow-sm h-full">
-                  <span className="text-4xl font-bold text-teal/20">{s.num}</span>
-                  <h3 className="text-xl font-bold text-ink mt-3 mb-3">{s.title}</h3>
-                  <p className="text-ink/60 text-sm leading-relaxed">{s.body}</p>
-                </div>
-              </AnimatedSection>
+              </>
             ))}
           </div>
         </div>
