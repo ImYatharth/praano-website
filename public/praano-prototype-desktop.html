@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praano HMS — Interactive Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --t:#007B7F;--tl:#E6F4F4;--td:#005F62;
+  --r:#C62828;--rl:#FFEBEE;
+  --a:#E65100;--al:#FFF3E0;
+  --g:#2E7D32;--gl:#E8F5E9;
+  --ink:#1A1A2E;--w:#fff;
+  --g1:#F8FAFA;--g2:#EEEEEE;--g4:#BDBDBD;--g6:#6B7280;--g8:#374151;
+  --f:'DM Sans',sans-serif;
+  --sidebar:240px;
+}
+html,body{height:100%;font-family:var(--f);background:#F0F4F4;color:var(--ink);font-size:14px}
+
+/* SCREENS */
+.sc{display:none;width:100%;min-height:100vh}
+.sc.on{display:flex}
+
+/* LOGIN */
+.login-wrap{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#005F62 0%,#007B7F 50%,#009BA0 100%)}
+.login-card{background:var(--w);border-radius:16px;padding:48px 40px;width:400px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.login-logo{font-size:36px;font-weight:800;color:var(--t);letter-spacing:-1px;margin-bottom:6px}
+.login-sub{font-size:14px;color:var(--g6);margin-bottom:32px}
+.lbl{display:block;font-size:12px;font-weight:600;color:var(--g8);margin-bottom:5px}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--g2);border-radius:8px;font-size:14px;font-family:var(--f);color:var(--ink);background:var(--w);outline:none;appearance:none;-webkit-appearance:none;transition:border-color .12s}
+input:focus,select:focus,textarea:focus{border-color:var(--t)}
+textarea{resize:none;line-height:1.5}
+.ff{margin-bottom:16px}
+.ff .lbl{display:block;font-size:12px;font-weight:600;color:var(--g8);margin-bottom:5px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border:none;border-radius:8px;font-size:14px;font-weight:600;font-family:var(--f);cursor:pointer;transition:opacity .12s;white-space:nowrap}
+.btn:active{opacity:.8}
+.btn-full{width:100%}
+.bp{background:var(--t);color:var(--w)}
+.brd{background:var(--r);color:var(--w)}
+.bo{background:transparent;color:var(--t);border:1.5px solid var(--t)}
+.bgh{background:var(--g1);color:var(--ink);border:1px solid var(--g2)}
+.bsm{padding:7px 14px;font-size:13px}
+
+/* DESKTOP LAYOUT */
+.desktop{display:flex;width:100%;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:#1A2A3A;flex-shrink:0;display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;overflow-y:auto;z-index:100}
+.sidebar-logo{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-logo-name{font-size:24px;font-weight:800;color:white;letter-spacing:-0.5px}
+.sidebar-logo-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:3px}
+.sidebar-section{padding:16px 12px 6px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;margin:1px 8px;transition:all .12s;color:rgba(255,255,255,.6);font-size:13px;font-weight:500}
+.nav-item:hover{background:rgba(255,255,255,.06);color:white}
+.nav-item.active{background:rgba(0,123,127,.3);color:white}
+.nav-item i{font-size:16px;flex-shrink:0}
+.sidebar-bottom{padding:16px;margin-top:auto;border-top:1px solid rgba(255,255,255,.08)}
+.sidebar-user{display:flex;align-items:center;gap:10px}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--t);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0}
+.user-name{font-size:13px;font-weight:600;color:white}
+.user-role{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px}
+
+/* MAIN CONTENT */
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--w);border-bottom:1px solid var(--g2);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:18px;font-weight:700;color:var(--ink)}
+.topbar-sub{font-size:13px;color:var(--g6);margin-top:1px}
+.topbar-actions{display:flex;align-items:center;gap:12px}
+.content{padding:28px;flex:1}
+
+/* GRID LAYOUTS */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.grid-1-2{display:grid;grid-template-columns:1fr 2fr;gap:20px}
+
+/* CARDS */
+.card{background:var(--w);border:1px solid var(--g2);border-radius:12px;padding:20px}
+.card-sm{background:var(--w);border:1px solid var(--g2);border-radius:10px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:background .1s}
+.card-sm:active,.card-sm:hover{background:var(--g1)}
+.card-title{font-size:13px;font-weight:600;color:var(--ink)}
+.card-sub{font-size:12px;color:var(--g6);margin-top:2px}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.card h3{font-size:15px;font-weight:700;color:var(--ink)}
+.card h4{font-size:13px;font-weight:600;color:var(--g6);margin-bottom:10px}
+
+/* STAT CARDS */
+.stat-card{background:var(--w);border:1px solid var(--g2);border-radius:12px;padding:20px}
+.stat-num{font-size:32px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.stat-lbl{font-size:13px;color:var(--g6)}
+.stat-trend{font-size:12px;margin-top:6px}
+
+/* BADGES */
+.b{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.bg{background:var(--gl);color:var(--g)}
+.ba{background:var(--al);color:var(--a)}
+.br{background:var(--rl);color:var(--r)}
+.bt{background:var(--tl);color:var(--td)}
+.bx{background:var(--g1);color:var(--g6)}
+
+/* BANNERS */
+.bn{padding:12px 16px;border-radius:8px;font-size:13px;margin-bottom:16px;line-height:1.6;border:1px solid transparent;display:flex;align-items:flex-start;gap:10px}
+.bn i{font-size:16px;flex-shrink:0;margin-top:1px}
+.bn-g{background:var(--gl);color:var(--g);border-color:#A5D6A7}
+.bn-r{background:var(--rl);color:var(--r);border-color:#FFCDD2}
+.bn-a{background:var(--al);color:var(--a);border-color:#FFCC80}
+.bn-t{background:var(--tl);color:var(--td);border-color:#B2DFDB}
+
+/* TABLE */
+.table{width:100%;border-collapse:collapse}
+.table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--g6);border-bottom:1px solid var(--g2);background:var(--g1)}
+.table td{padding:12px 14px;border-bottom:1px solid var(--g2);font-size:13px;color:var(--ink)}
+.table tr:hover td{background:var(--g1);cursor:pointer}
+.table tr:last-child td{border-bottom:none}
+
+/* FORM ELEMENTS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.req{color:var(--r)}
+.hint{font-size:11px;color:var(--g6);margin-top:4px}
+
+/* DIVIDER */
+.dv{height:1px;background:var(--g2);margin:20px 0}
+
+/* VITAL ROW */
+.vr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--g2)}
+.vr:last-child{border-bottom:none}
+.vk{font-size:12px;color:var(--g6)}
+.vv{font-size:14px;font-weight:600;color:var(--ink)}
+.vv.al{color:var(--r)}
+
+/* RX */
+.rx-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--g2)}
+.rx-row:last-child{border-bottom:none}
+.rxc{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--g4);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px}
+.rxc.ck{background:var(--t);border-color:var(--t);color:var(--w)}
+
+/* TAGS ROW */
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+/* SECTION LABEL */
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--g6);margin-bottom:12px}
+
+/* STEP */
+.stp{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--g2)}
+.stp:last-child{border-bottom:none}
+.stpn{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.spa{background:var(--t);color:var(--w)}
+.spd{background:var(--gl);color:var(--g)}
+.spp{background:var(--g1);color:var(--g6)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--g2);margin-bottom:20px}
+.tab{padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--g6);font-family:var(--f);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .12s}
+.tab.on{color:var(--t);border-bottom-color:var(--t)}
+
+/* NOTIF */
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--g2)}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.notif-text{font-size:13px;color:var(--ink);line-height:1.5}
+.notif-time{font-size:11px;color:var(--g6);margin-top:3px}
+
+/* WARD BAR */
+.wb{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.wbb{flex:1;height:8px;background:var(--g2);border-radius:4px;overflow:hidden}
+.wbf{height:8px;border-radius:4px;background:var(--t)}
+
+/* ROLE GRID */
+.role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:800px;margin:0 auto}
+.role-card{background:var(--w);border:1.5px solid var(--g2);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:all .15s}
+.role-card:hover{border-color:var(--t);background:var(--tl);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,123,127,.12)}
+.role-card i{font-size:28px;color:var(--t);display:block;margin-bottom:10px}
+.role-card span{font-size:14px;font-weight:600;color:var(--ink)}
+
+/* PATIENT ROW */
+.pt-row{display:flex;align-items:center;gap:12px}
+.pt-av{width:36px;height:36px;border-radius:50%;background:var(--tl);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--td);flex-shrink:0}
+.tok{min-width:40px;height:40px;border-radius:8px;background:var(--tl);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:var(--td);flex-shrink:0}
+
+/* PAY GRID */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.pb{padding:16px 12px;border-radius:10px;border:1.5px solid var(--g2);background:var(--w);cursor:pointer;text-align:center;font-family:var(--f);transition:all .12s}
+.pb:hover{border-color:var(--t);background:var(--tl)}
+.pb i{font-size:24px;color:var(--t);display:block;margin-bottom:6px}
+.pb span{font-size:13px;font-weight:600;color:var(--ink)}
+.pb small{display:block;font-size:11px;color:var(--g6);margin-top:2px}
+
+/* UPLOAD */
+.ub{border:2px dashed var(--g4);border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .12s}
+.ub:hover{border-color:var(--t);background:var(--tl)}
+.ub i{font-size:32px;color:var(--t);display:block;margin-bottom:8px}
+.ub p{font-size:14px;font-weight:600;color:var(--ink)}
+.ub small{font-size:12px;color:var(--g6)}
+
+/* INVOICE */
+.inv{background:var(--w);border:1px solid var(--g2);border-radius:10px;padding:20px}
+.inv-header{text-align:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--g2)}
+.inv-title{font-size:17px;font-weight:700;color:var(--ink)}
+.totrow{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:2px solid var(--g2);margin-top:4px}
+
+/* WA */
+.wa-hd{background:#128C7E;padding:14px 20px;display:flex;align-items:center;gap:12px}
+.wa-av{width:38px;height:38px;border-radius:50%;background:#075E54;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
+.wa-bg{background:#ECE5DD;padding:16px;flex:1}
+.msg{display:inline-block;max-width:520px;padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.6;background:white;color:var(--ink)}
+.mt{font-size:10px;color:#888;margin-top:4px;display:block;text-align:right}
+.dlbl{text-align:center;margin:14px 0 10px}
+.dchip{background:rgba(255,255,255,.75);color:#555;font-size:11px;padding:3px 10px;border-radius:10px;display:inline-block}
+
+/* MISC */
+.page-intro{margin-bottom:24px}
+.page-intro h2{font-size:22px;font-weight:800;color:var(--ink)}
+.page-intro p{font-size:14px;color:var(--g6);margin-top:4px}
+.empty{text-align:center;padding:48px 24px;color:var(--g6)}
+.empty i{font-size:40px;display:block;margin-bottom:12px;opacity:.4}
+.tap{padding:5px 13px;border-radius:20px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:var(--f)}
+.td2{background:var(--gl);color:var(--g)}
+.tt{background:var(--g1);color:var(--g6);border:1px solid var(--g2)}
+.tr-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--g2);font-size:13px}
+.tr-row:last-child{border-bottom:none}
+
+/* TOPBAR NOTIF BUTTON */
+.notif-btn{position:relative;background:none;border:none;cursor:pointer;font-size:20px;color:var(--g6);padding:4px}
+.nbdg{background:var(--r);color:white;border-radius:50%;width:16px;height:16px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;position:absolute;top:-2px;right:-2px}
+
+/* SEPARATOR */
+.sep{height:1px;background:var(--g2);margin:16px 0}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════════════════════ LOGIN ══════════════════════════ -->
+<div class="sc on" id="s-login">
+<div class="login-wrap">
+<div class="login-card">
+  <div class="login-logo">Praano</div>
+  <div class="login-sub">AI-powered hospital management · Sunrise Hospital</div>
+  <div class="ff"><span class="lbl">Staff ID</span><input type="text" placeholder="Enter your staff ID"></div>
+  <div class="ff"><span class="lbl">Password</span><input type="password" placeholder="Enter password"></div>
+  <button class="btn bp btn-full" onclick="go('s-roles')" style="margin-top:4px">Sign in</button>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════ ROLE SELECT ══════════════════════════ -->
+<div class="sc" id="s-roles">
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F0F4F4;padding:40px 20px">
+  <div style="margin-bottom:40px;text-align:center">
+    <div style="font-size:32px;font-weight:800;color:var(--t);letter-spacing:-1px;margin-bottom:6px">Praano HMS</div>
+    <div style="font-size:15px;color:var(--g6)">Sunrise Hospital · Select your role to continue</div>
+  </div>
+  <div class="role-grid">
+    <div class="role-card" onclick="go('s-rec')"><i class="ti ti-user-plus"></i><span>Receptionist</span></div>
+    <div class="role-card" onclick="go('s-doc')"><i class="ti ti-stethoscope"></i><span>Doctor</span></div>
+    <div class="role-card" onclick="go('s-nur')"><i class="ti ti-heart-rate-monitor"></i><span>Nurse</span></div>
+    <div class="role-card" onclick="go('s-pharm')"><i class="ti ti-pill"></i><span>Pharmacy</span></div>
+    <div class="role-card" onclick="go('s-lab')"><i class="ti ti-flask"></i><span>Lab / Radiology</span></div>
+    <div class="role-card" onclick="go('s-bill')"><i class="ti ti-receipt"></i><span>Billing</span></div>
+    <div class="role-card" onclick="go('s-adm')"><i class="ti ti-building-hospital"></i><span>Administrator</span></div>
+    <div class="role-card" onclick="go('s-wa')"><i class="ti ti-brand-whatsapp"></i><span>Patient WhatsApp</span></div>
+  </div>
+  <p style="font-size:12px;color:var(--g4);margin-top:32px">This is an interactive prototype — tap any role to explore</p>
+</div>
+</div>
+
+<!-- ══════════════════════════ RECEPTIONIST ══════════════════════════ -->
+<div class="sc" id="s-rec">
+<div class="desktop">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div>
+    <div class="sidebar-section">Reception</div>
+    <div class="nav-item active" onclick="go('s-rec')"><i class="ti ti-layout-dashboard"></i> Dashboard</div>
+    <div class="nav-item" onclick="go('s-queue')"><i class="ti ti-list-numbers"></i> Today's Queue</div>
+    <div class="nav-item" onclick="go('s-rec')"><i class="ti ti-user-plus"></i> Register Patient</div>
+    <div class="sidebar-section">Quick Actions</div>
+    <div class="nav-item" onclick="go('s-emg')" style="color:#FF8A80"><i class="ti ti-alert-triangle"></i> Emergency</div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div><div class="user-role">Receptionist</div></div></div>
+      <button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><div class="topbar-title">Reception</div><div style="font-size:12px;color:var(--g6)">Tuesday, 26 May 2026</div></div>
+      <div class="topbar-actions">
+        <button class="btn brd" onclick="go('s-emg')"><i class="ti ti-alert-triangle"></i> Emergency Admission</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px">
+        <div class="stat-card"><div class="stat-num">24</div><div class="stat-lbl">Patients today</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--a)">6</div><div class="stat-lbl">In OPD queue</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--t)">12</div><div class="stat-lbl">IPD admitted</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--r)">1</div><div class="stat-lbl">Emergency today</div></div>
+      </div>
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="card-header"><h3>Patient Search</h3></div>
+          <div class="form-row" style="margin-bottom:16px">
+            <div class="ff" style="margin-bottom:0"><span class="lbl">Mobile Number or UHID <span class="req">*</span></span><input type="tel" id="mob" placeholder="Enter mobile or UHID" oninput="chkM(this.value)"><div class="hint">Try: 9876543210 (returning) or any 10-digit number (new)</div></div>
+            <div style="display:flex;align-items:flex-end"><button class="btn bp btn-full" id="sbtn" onclick="doS()" disabled style="opacity:.4">Search Patient</button></div>
+          </div>
+          <div class="sep"></div>
+          <h4 class="sec-lbl">Today's Queue</h4>
+          <table class="table">
+            <thead><tr><th>Token</th><th>Patient</th><th>Department</th><th>Complaint</th><th>Wait</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr onclick="go('s-opd')"><td><div class="tok" style="display:inline-flex">C-14</div></td><td><div class="pt-row"><div class="pt-av">RS</div><div><div class="card-title">Ramesh Sharma</div><div class="card-sub">58 yrs · Star Health</div></div></div></td><td>Cardiology</td><td>Chest pain since 2 days</td><td>42 min</td><td><span class="b ba">Waiting</span></td></tr>
+              <tr onclick="go('s-rec')"><td><div class="tok" style="display:inline-flex">G-08</div></td><td><div class="pt-row"><div class="pt-av">PD</div><div><div class="card-title">Priya Desai</div><div class="card-sub">34 yrs · Self Pay</div></div></div></td><td>Gen. Medicine</td><td>Fever and body ache</td><td>28 min</td><td><span class="b ba">Waiting</span></td></tr>
+              <tr onclick="go('s-rec')"><td><div class="tok" style="background:var(--t);color:white;display:inline-flex">C-13</div></td><td><div class="pt-row"><div class="pt-av">SR</div><div><div class="card-title">Sunita Rao</div><div class="card-sub">62 yrs · New India</div></div></div></td><td>Cardiology</td><td>Follow-up, hypertension</td><td>15 min</td><td><span class="b bt">With Doctor</span></td></tr>
+              <tr onclick="go('s-rec')" style="opacity:.5"><td><div class="tok" style="background:var(--g1);color:var(--g6);display:inline-flex">G-05</div></td><td><div class="pt-row"><div class="pt-av" style="background:var(--g2);color:var(--g6)">MI</div><div><div class="card-title">Meera Iyer</div><div class="card-sub">28 yrs · Self Pay</div></div></div></td><td>Gen. Medicine</td><td>Viral fever</td><td>—</td><td><span class="b bx">Done</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <h4 class="sec-lbl">IPD Bed Status</h4>
+            <div style="padding:4px 0">
+              <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">Ward A</span><div class="wbb"><div class="wbf" style="width:90%"></div></div><span style="font-size:12px;min-width:40px;text-align:right">9/10</span></div>
+              <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">Ward B</span><div class="wbb"><div class="wbf" style="width:80%"></div></div><span style="font-size:12px;min-width:40px;text-align:right">8/10</span></div>
+              <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">ICU</span><div class="wbb"><div class="wbf" style="width:100%;background:var(--r)"></div></div><span style="font-size:12px;min-width:40px;text-align:right;color:var(--r);font-weight:700">5/5 FULL</span></div>
+              <div class="wb" style="margin-bottom:0"><span style="font-size:12px;min-width:80px;color:var(--g6)">Emergency</span><div class="wbb"><div class="wbf" style="width:60%"></div></div><span style="font-size:12px;min-width:40px;text-align:right">3/5</span></div>
+            </div>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--g2)"><span style="font-size:24px;font-weight:800;color:var(--t)">18</span><span style="font-size:13px;color:var(--g6);margin-left:6px">beds available</span></div>
+          </div>
+          <div class="card">
+            <h4 class="sec-lbl">Quick Actions</h4>
+            <button class="btn bgh btn-full" style="margin-bottom:8px" onclick="go('s-new')"><i class="ti ti-user-plus"></i> New Patient Registration</button>
+            <button class="btn bgh btn-full" onclick="go('s-queue')"><i class="ti ti-list"></i> View Full Queue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- RETURNING PATIENT FOUND -->
+<div class="sc" id="s-ret">
+<div class="desktop">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div>
+    <div class="nav-item" onclick="go('s-rec')"><i class="ti ti-arrow-left"></i> Back to Reception</div>
+    <div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div><div class="user-role">Receptionist</div></div></div></div>
+  </div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Returning Patient Found</div></div></div>
+    <div class="content">
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Patient found in system</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px">
+            <div><h2 style="font-size:24px;font-weight:800;color:var(--ink)">Ramesh Sharma</h2><p style="font-size:14px;color:var(--g6);margin-top:4px">58 yrs · Male · 9876543210 · UHID: SH-10042</p><div class="tags"><span class="b bg">ABHA linked</span><span class="b bt">Star Health</span></div></div>
+          </div>
+          <div class="grid-2" style="margin-bottom:20px">
+            <div class="card" style="background:var(--g1)"><div class="sec-lbl">Medical History</div><p style="font-size:13px">Hypertension · Type 2 Diabetes</p><p style="font-size:12px;color:var(--g6);margin-top:4px">Amlodipine 5mg · Metformin 500mg</p></div>
+            <div class="card" style="background:var(--g1)"><div class="sec-lbl">Last Visit</div><p style="font-size:13px">12 Jan 2026 · Cardiology</p><p style="font-size:12px;color:var(--g6);margin-top:4px">Discharged stable · Dr. Mehta</p></div>
+          </div>
+          <div class="sep"></div>
+          <div class="sec-lbl">Select Visit Type</div>
+          <div class="grid-2">
+            <button class="btn bp btn-full" onclick="go('s-opd')"><i class="ti ti-stethoscope"></i> OPD — Outpatient Visit</button>
+            <button class="btn bgh btn-full" onclick="go('s-opd')"><i class="ti ti-calendar-event"></i> Follow-up Visit</button>
+            <button class="btn bo btn-full" onclick="go('s-ipd')"><i class="ti ti-bed"></i> IPD — Inpatient Admission</button>
+            <button class="btn brd btn-full" onclick="go('s-emg-k')"><i class="ti ti-alert-triangle"></i> Emergency</button>
+          </div>
+        </div>
+        <div class="card"><div class="sec-lbl">Insurance</div><p style="font-size:15px;font-weight:600">Star Health</p><p style="font-size:12px;color:var(--g6);margin-top:2px">Policy: SH-2024-88421</p><div class="sep"></div><div class="sec-lbl">Language</div><p style="font-size:14px">Hindi</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- NEW PATIENT -->
+<div class="sc" id="s-new">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-arrow-left"></i> Back to Reception</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div><div class="user-role">Receptionist</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">New Patient Registration</div><div style="font-size:12px;color:var(--g6)">First-time patient</div></div></div>
+    <div class="content">
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="sec-lbl">Basic Details</div>
+          <div class="ff"><span class="lbl">Mobile Number</span><input value="9123456789" disabled style="background:var(--g1);color:var(--g6)"></div>
+          <div class="form-row"><div class="ff"><span class="lbl">Full Name <span class="req">*</span></span><input type="text" placeholder="Patient's full name"></div><div class="form-row" style="grid-template-columns:1fr 1fr;gap:12px"><div class="ff"><span class="lbl">Age <span class="req">*</span></span><input type="number" placeholder="45"></div><div class="ff"><span class="lbl">Gender <span class="req">*</span></span><select><option>Select</option><option>Male</option><option>Female</option><option>Other</option></select></div></div></div>
+          <div class="sep"></div>
+          <div class="sec-lbl">Insurance</div>
+          <div class="form-row"><div class="ff"><span class="lbl">Insurance Type</span><select id="ins" onchange="tgI(this.value)"><option value="s">Self Pay</option><option value="i">Star Health</option><option value="i">HDFC Ergo</option><option value="p">PMJAY</option><option value="i">New India</option></select></div><div class="ff" id="pol" style="display:none"><span class="lbl">Policy Number <span class="req">*</span></span><input type="text" placeholder="Policy or card number"></div></div>
+          <div class="sep"></div>
+          <div class="sec-lbl">Language Preference</div>
+          <div class="form-row"><div class="ff"><span class="lbl">Preferred Language</span><select><option>Hindi</option><option>Gujarati</option><option>English</option><option>Marathi</option></select><div class="hint">Used for WhatsApp discharge messages</div></div></div>
+          <button class="btn bp" onclick="go('s-new-v')"><i class="ti ti-check"></i> Register Patient</button>
+        </div>
+        <div class="card"><div class="sec-lbl">About ABHA</div><p style="font-size:13px;color:var(--g6);line-height:1.7">An ABHA (Ayushman Bharat Health Account) ID will be created automatically after registration. This gives the patient a lifelong digital health ID linked to all future hospital visits across India.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- NEW VISIT TYPE -->
+<div class="sc" id="s-new-v">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-new')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Patient Registered</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Patient registered successfully. ABHA ID creation initiated.</span></div>
+      <div class="card" style="margin-bottom:20px"><h2 style="font-size:20px;font-weight:800;margin-bottom:4px">New Patient</h2><p style="font-size:14px;color:var(--g6)">9123456789</p><div class="tags" style="margin-top:8px"><span class="b ba">ABHA pending</span><span class="b bx">Self Pay</span></div></div>
+      <div class="sec-lbl">What is this visit for?</div>
+      <div class="grid-2">
+        <button class="btn bp btn-full" onclick="go('s-opd')"><i class="ti ti-stethoscope"></i> OPD — Outpatient Visit</button>
+        <button class="btn bgh btn-full" onclick="go('s-opd')"><i class="ti ti-calendar-event"></i> Follow-up Visit</button>
+        <button class="btn bo btn-full" onclick="go('s-ipd')"><i class="ti ti-bed"></i> IPD — Inpatient Admission</button>
+        <button class="btn brd btn-full" onclick="go('s-emg')"><i class="ti ti-alert-triangle"></i> Emergency</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- OPD -->
+<div class="sc" id="s-opd">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-ret')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">OPD Registration</div><div style="font-size:12px;color:var(--g6)">Ramesh Sharma</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="card">
+        <div class="form-row"><div class="ff"><span class="lbl">Department <span class="req">*</span></span><select><option>Cardiology</option><option>General Medicine</option><option>Orthopaedics</option><option>Neurology</option></select></div><div class="ff"><span class="lbl">Chief Complaint <span class="req">*</span></span><input type="text" value="Chest pain since 2 days"></div></div>
+        <button class="btn bp" onclick="go('s-tok')"><i class="ti ti-check"></i> Add to Queue</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TOKEN -->
+<div class="sc" id="s-tok">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-layout-dashboard"></i> Reception</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Patient Added to Queue</div></div></div>
+    <div class="content" style="max-width:600px">
+      <div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Added to queue. Doctor notified automatically.</span></div>
+      <div class="card" style="text-align:center;padding:40px">
+        <p style="font-size:13px;color:var(--g6);margin-bottom:8px">Queue Token</p>
+        <p style="font-size:80px;font-weight:800;color:var(--t);letter-spacing:6px">C-14</p>
+        <p style="font-size:16px;color:var(--g6);margin-top:8px">Ramesh Sharma · Cardiology · Dr. Mehta</p>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <button class="btn bgh btn-full" onclick="go('s-queue')"><i class="ti ti-list"></i> View Today's Queue</button>
+        <button class="btn bp btn-full" onclick="go('s-rec')"><i class="ti ti-user-plus"></i> Register Next Patient</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- IPD -->
+<div class="sc" id="s-ipd">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-ret')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">IPD Admission</div><div style="font-size:12px;color:var(--g6)">Ramesh Sharma</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="card">
+        <div class="form-row"><div class="ff"><span class="lbl">Department <span class="req">*</span></span><select><option>Cardiology</option><option>General Medicine</option></select></div><div class="ff"><span class="lbl">Reason for Admission <span class="req">*</span></span><input type="text" placeholder="e.g. Unstable angina"></div></div>
+        <div class="form-row"><div class="ff"><span class="lbl">Available Bed <span class="req">*</span></span><select><option>Ward B — Bed 02 (General)</option><option>Ward C — Bed 11 (Semi-private)</option><option>Ward A — Bed 04 (Private)</option></select></div><div class="ff"><span class="lbl">Assigned Doctor</span><select><option>Dr. S. Mehta — Cardiology</option><option>Dr. R. Patel — Gen. Medicine</option></select></div></div>
+        <button class="btn bp" onclick="go('s-ipd-d')"><i class="ti ti-check"></i> Confirm Admission</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="sc" id="s-ipd-d">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-layout-dashboard"></i> Reception</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Patient Admitted</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Patient admitted. All departments notified simultaneously.</span></div><div class="card"><h3 style="margin-bottom:8px">Ramesh Sharma</h3><p style="color:var(--g6)">Ward B · Bed 02 · Cardiology · Dr. S. Mehta</p><div class="sep"></div><div style="font-size:13px;color:var(--g6);line-height:2.2"><div style="display:flex;justify-content:space-between"><span>Doctor notified</span><span class="b bg">Done</span></div><div style="display:flex;justify-content:space-between"><span>Nurse station notified</span><span class="b bg">Done</span></div><div style="display:flex;justify-content:space-between"><span>Pharmacy notified</span><span class="b bg">Done</span></div><div style="display:flex;justify-content:space-between"><span>Billing desk notified</span><span class="b bg">Done</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-rec')"><i class="ti ti-arrow-left"></i> Back to Reception</button></div>
+  </div>
+</div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="sc" id="s-emg">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-arrow-left"></i> Back to Reception</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title" style="color:var(--r)">Emergency Admission</div><div style="font-size:12px;color:var(--r)">Fill what you can. Submit immediately.</div></div></div>
+    <div class="content">
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="bn bn-a"><i class="ti ti-info-circle"></i><span>Details can be completed after stabilisation. Do not delay admission.</span></div>
+          <div class="form-row"><div class="ff"><span class="lbl">Triage Note <span class="req">*</span></span><input type="text" placeholder="e.g. RTA, unconscious, suspected head injury"></div><div class="ff"><span class="lbl">Send To</span><select><option>Emergency Ward</option><option>ICU</option><option>Ward A</option></select></div></div>
+          <div class="ff"><span class="lbl">Assign Bed (optional)</span><select><option>Assign later</option><option>ICU — Bed 01</option><option>ICU — Bed 03</option><option>Emergency — E-01</option></select></div>
+          <div class="sep"></div>
+          <div class="sec-lbl">Patient Details (fill what you have)</div>
+          <div class="form-row"><div class="ff"><span class="lbl">Name</span><input type="text" placeholder="If known"></div><div class="ff"><span class="lbl">Mobile</span><input type="tel" placeholder="If known"></div></div>
+          <div class="form-row-3"><div class="ff"><span class="lbl">Age</span><input type="number" placeholder="Age"></div><div class="ff"><span class="lbl">Gender</span><select><option>—</option><option>Male</option><option>Female</option></select></div></div>
+          <button class="btn brd" onclick="go('s-emg-d')"><i class="ti ti-alert-triangle"></i> Admit Emergency Patient Now</button>
+        </div>
+        <div class="card"><div class="sec-lbl">Available ICU / Emergency Beds</div><div class="tr-row"><span>ICU — Bed 01</span><span class="b bg">Available</span></div><div class="tr-row"><span>ICU — Bed 02</span><span class="b br">Occupied</span></div><div class="tr-row"><span>ICU — Bed 03</span><span class="b bg">Available</span></div><div class="tr-row"><span>Emergency — E-01</span><span class="b bg">Available</span></div><div class="tr-row"><span>Emergency — E-02</span><span class="b br">Occupied</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="sc" id="s-emg-k">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-ret')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title" style="color:var(--r)">Emergency</div><div style="font-size:12px;color:var(--r)">Ramesh Sharma</div></div></div>
+    <div class="content" style="max-width:700px"><div class="bn bn-a"><i class="ti ti-info-circle"></i><span>Do not delay admission.</span></div><div class="card" style="margin-bottom:16px"><h3>Ramesh Sharma</h3><p style="font-size:13px;color:var(--g6);margin-top:4px">58 yrs · Star Health · ABHA linked</p></div><div class="card"><div class="form-row"><div class="ff"><span class="lbl">Triage Note <span class="req">*</span></span><input type="text" placeholder="e.g. Chest pain, BP 180/110"></div><div class="ff"><span class="lbl">Send To</span><select><option>ICU</option><option>Emergency Ward</option></select></div></div><div class="ff"><span class="lbl">Assign Bed (optional)</span><select><option>ICU — Bed 03</option><option>Assign later</option></select></div><button class="btn brd" onclick="go('s-emg-d')"><i class="ti ti-alert-triangle"></i> Admit Emergency Patient Now</button></div></div>
+  </div>
+</div>
+</div>
+<div class="sc" id="s-emg-d">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-layout-dashboard"></i> Reception</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Emergency Registered</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-r" style="font-weight:700"><i class="ti ti-alert-triangle"></i><span>All departments notified simultaneously</span></div><div class="card"><h3 style="margin-bottom:8px">ICU — Bed 03</h3><p style="color:var(--g6)">Emergency admission registered</p><div class="sep"></div><div style="font-size:13px;color:var(--g6);line-height:2.2"><div style="display:flex;justify-content:space-between"><span>Duty doctor</span><span class="b br">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Senior nurse</span><span class="b br">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Ward supervisor</span><span class="b br">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Registration status</span><span class="b ba">Incomplete — complete after stabilisation</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-rec')"><i class="ti ti-arrow-left"></i> Back to Reception</button></div>
+  </div>
+</div>
+</div>
+
+<!-- QUEUE VIEW -->
+<div class="sc" id="s-queue">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="sidebar-section">Reception</div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i class="ti ti-list-numbers"></i> Today's Queue</div><div class="nav-item" onclick="go('s-rec')"><i class="ti ti-user-plus"></i> Register Patient</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RS</div><div><div class="user-name">Ritu Shah</div><div class="user-role">Receptionist</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Today's Queue</div><div style="font-size:12px;color:var(--g6)">26 May 2026 · 3 waiting · 1 with doctor · 2 done</div></div><button class="btn bp" onclick="go('s-rec')"><i class="ti ti-user-plus"></i> Register New Patient</button></div>
+    <div class="content">
+      <div class="card">
+        <table class="table">
+          <thead><tr><th>Token</th><th>Patient</th><th>Age</th><th>Department</th><th>Complaint</th><th>Insurance</th><th>Wait</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr onclick="go('s-opd')"><td><div class="tok" style="display:inline-flex">C-14</div></td><td><b>Ramesh Sharma</b></td><td>58</td><td>Cardiology</td><td>Chest pain 2 days</td><td>Star Health</td><td>42 min</td><td><span class="b ba">Waiting</span></td></tr>
+            <tr onclick="go('s-queue')"><td><div class="tok" style="display:inline-flex">G-08</div></td><td><b>New Patient</b></td><td>—</td><td>Gen. Medicine</td><td>Fever</td><td>Self Pay</td><td>28 min</td><td><span class="b ba">Waiting</span></td></tr>
+            <tr onclick="go('s-queue')"><td><div class="tok" style="display:inline-flex">O-03</div></td><td><b>Arjun Mehta</b></td><td>45</td><td>Orthopaedics</td><td>Knee pain</td><td>Self Pay</td><td>15 min</td><td><span class="b ba">Waiting</span></td></tr>
+            <tr onclick="go('s-queue')"><td><div class="tok" style="background:var(--t);color:white;display:inline-flex">C-13</div></td><td><b>Sunita Rao</b></td><td>62</td><td>Cardiology</td><td>Follow-up hypertension</td><td>New India</td><td>—</td><td><span class="b bt">With Doctor</span></td></tr>
+            <tr onclick="go('s-queue')" style="opacity:.5"><td><div class="tok" style="background:var(--g1);color:var(--g6);display:inline-flex">G-05</div></td><td><b>Meera Iyer</b></td><td>28</td><td>Gen. Medicine</td><td>Viral fever</td><td>Self Pay</td><td>—</td><td><span class="b bx">Done</span></td></tr>
+            <tr onclick="go('s-queue')" style="opacity:.5"><td><div class="tok" style="background:var(--g1);color:var(--g6);display:inline-flex">N-01</div></td><td><b>Vikram Shah</b></td><td>51</td><td>Neurology</td><td>Headache</td><td>Star Health</td><td>—</td><td><span class="b bx">Done</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ DOCTOR ══════════════════════════ -->
+<div class="sc" id="s-doc">
+<div class="desktop">
+  <div class="sidebar">
+    <div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div>
+    <div class="sidebar-section">Doctor</div>
+    <div class="nav-item active" onclick="go('s-doc')"><i class="ti ti-layout-dashboard"></i> My Dashboard</div>
+    <div class="nav-item" onclick="go('s-notif')"><i class="ti ti-bell"></i> Notifications <span class="b br" style="margin-left:auto;font-size:10px">3</span></div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div><div class="user-role">Cardiology</div></div></div>
+      <button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div><div class="topbar-title">Good morning, Dr. Mehta</div><div style="font-size:12px;color:var(--g6)">Tuesday, 26 May 2026 · Cardiology</div></div>
+      <div class="topbar-actions">
+        <button class="notif-btn" onclick="go('s-notif')"><i class="ti ti-bell"></i><span class="nbdg">3</span></button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px">
+        <div class="stat-card"><div class="stat-num">4</div><div class="stat-lbl">Patients seen today</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--a)">6</div><div class="stat-lbl">Waiting in OPD</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--t)">3</div><div class="stat-lbl">My IPD patients</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:var(--g)">1</div><div class="stat-lbl">Discharge ready</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><h3>OPD Queue</h3><span class="b ba">6 waiting</span></div>
+          <table class="table">
+            <thead><tr><th>Token</th><th>Patient</th><th>Complaint</th><th>Wait</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr onclick="go('s-pt-opd')"><td><div class="tok" style="display:inline-flex">C-14</div></td><td><div><div class="card-title">Ramesh Sharma</div><div class="card-sub" style="display:flex;gap:4px;margin-top:3px"><span class="b bt">Star Health</span><span class="b br"><i class="ti ti-alert-triangle" style="font-size:9px"></i> Allergy</span><span class="b ba">Lab ready</span></div></div></td><td style="font-size:13px">Chest pain 2 days</td><td style="font-size:12px;color:var(--g6)">42 min</td><td><span class="b ba">Waiting</span></td><td><button class="btn bsm bp" onclick="go('s-pt-opd')">Open</button></td></tr>
+              <tr onclick="go('s-doc')"><td><div class="tok" style="display:inline-flex">G-08</div></td><td><div><div class="card-title">Priya Desai</div><div class="card-sub" style="margin-top:3px"><span class="b bx">Self Pay</span></div></div></td><td style="font-size:13px">Fever and body ache</td><td style="font-size:12px;color:var(--g6)">28 min</td><td><span class="b ba">Waiting</span></td><td><button class="btn bsm bgh" onclick="go('s-doc')">Open</button></td></tr>
+              <tr onclick="go('s-doc')"><td><div class="tok" style="background:var(--t);color:white;display:inline-flex">C-13</div></td><td><div><div class="card-title">Sunita Rao</div><div class="card-sub" style="margin-top:3px"><span class="b bt">New India</span></div></div></td><td style="font-size:13px">Follow-up, hypertension</td><td>—</td><td><span class="b bt">With Doctor</span></td><td><button class="btn bsm bgh" onclick="go('s-doc')">Open</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><h3>My IPD Patients</h3><span class="b bt">3 admitted</span></div>
+            <table class="table">
+              <thead><tr><th>Patient</th><th>Ward/Bed</th><th>Day</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr onclick="go('s-pt-ipd')"><td><div class="card-title">Arjun Mehta</div></td><td style="font-size:12px">Ward B · Bed 04</td><td style="font-size:12px">Day 3</td><td><span class="b br"><i class="ti ti-activity" style="font-size:9px"></i> BP high</span></td><td><button class="btn bsm bp" onclick="go('s-pt-ipd')">Open</button></td></tr>
+                <tr onclick="go('s-doc')"><td><div class="card-title">Meera Iyer</div></td><td style="font-size:12px">Ward A · Bed 01</td><td style="font-size:12px">Day 1</td><td><span class="b bg">Stable</span></td><td><button class="btn bsm bgh" onclick="go('s-doc')">Open</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Discharge Ready</h3></div>
+            <table class="table">
+              <thead><tr><th>Patient</th><th>Status</th><th></th></tr></thead>
+              <tbody><tr onclick="go('s-dis-rev')"><td><div class="card-title">Vikram Shah</div><div class="card-sub">Ward C · Bed 11</div></td><td><span class="b ba">Billing pending</span></td><td><button class="btn bsm bp" onclick="go('s-dis-rev')">Review</button></td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- NOTIFICATIONS -->
+<div class="sc" id="s-notif">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-doc')"><i class="ti ti-arrow-left"></i> Back to Dashboard</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Notifications</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="card">
+        <div class="notif-item"><div class="notif-dot" style="background:var(--r)"></div><div><div class="notif-text"><strong>Arjun Mehta</strong> — BP 158/98. Above threshold. Nurse flagged for review.</div><div class="notif-time">10 minutes ago · Ward B Bed 04</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:var(--a)"></div><div><div class="notif-text"><strong>Ramesh Sharma</strong> — CBC report ready. Haemoglobin low (9.2 g/dL).</div><div class="notif-time">25 minutes ago · Lab</div></div></div>
+        <div class="notif-item"><div class="notif-dot" style="background:var(--a)"></div><div><div class="notif-text"><strong>Drug interaction alert</strong> — Ramesh Sharma. Aspirin + Warfarin — bleeding risk. Review before confirming prescription.</div><div class="notif-time">32 minutes ago · Pharmacy</div></div></div>
+        <div class="notif-item" style="opacity:.5"><div class="notif-dot" style="background:var(--g2)"></div><div><div class="notif-text">Meera Iyer — Pre-auth approved. HDFC Ergo. ₹45,000.</div><div class="notif-time">2 hours ago · Insurance</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- OPD PATIENT VIEW -->
+<div class="sc" id="s-pt-opd">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-doc')"><i class="ti ti-arrow-left"></i> Back to Queue</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Ramesh Sharma</div><div style="font-size:12px;color:var(--g6)">Token C-14 · OPD · Cardiology</div></div><div class="topbar-actions"><button class="btn bgh bsm" onclick="go('s-voice')"><i class="ti ti-microphone"></i> Voice Note</button><button class="btn bo bsm" onclick="go('s-rx')"><i class="ti ti-pill"></i> Prescription</button><button class="btn bgh bsm" onclick="go('s-lo')"><i class="ti ti-flask"></i> Order Lab</button><button class="btn bp bsm" onclick="go('s-con-d')"><i class="ti ti-check"></i> Mark Done</button></div></div>
+    <div class="content">
+      <div class="bn bn-r"><i class="ti ti-alert-triangle"></i><strong>Allergy: Penicillin — severe reaction</strong></div>
+      <div style="display:flex;gap:12px;margin-bottom:16px"><div class="bn bn-t" style="flex:1;margin-bottom:0"><i class="ti ti-clock"></i><span>Last seen 12 Jan 2026 · Cardiology · Hypertension · Discharged stable</span></div><div class="bn bn-a" style="flex:1;margin-bottom:0"><i class="ti ti-flask"></i><span>Pending: CBC ready · Drug interaction alert on prescription</span></div></div>
+      <div class="grid-2-1">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><h3>Patient Overview</h3><div style="text-align:right"><span class="b bt">Star Health</span><div style="font-size:11px;color:var(--g6);margin-top:3px">Pre-auth pending</div></div></div>
+            <div class="grid-2" style="margin-bottom:16px"><div><p style="font-size:13px;font-weight:600;color:var(--g6)">Demographics</p><p style="font-size:14px;margin-top:4px">58 yrs · Male</p><p style="font-size:12px;color:var(--g6);margin-top:2px">Ref. Dr. Patel, Pune Clinic</p></div><div><p style="font-size:13px;font-weight:600;color:var(--g6)">Chief Complaint</p><p style="font-size:14px;margin-top:4px">Chest pain since 2 days, radiating to left arm</p></div></div>
+            <div class="sec-lbl">Vitals (entered by nurse · read only)</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+              <div style="background:var(--rl);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--r)">158/98</div><div style="font-size:11px;color:var(--r);margin-top:2px">mmHg · ALERT</div></div>
+              <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">88</div><div style="font-size:11px;color:var(--g6);margin-top:2px">Pulse bpm</div></div>
+              <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">98.6</div><div style="font-size:11px;color:var(--g6);margin-top:2px">Temp °F</div></div>
+              <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">97%</div><div style="font-size:11px;color:var(--g6);margin-top:2px">SpO2</div></div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Lab Results</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div><p style="font-size:14px;font-weight:600">CBC — Complete Blood Count</p><p style="font-size:12px;color:var(--g6)">Today · 9:42 AM</p></div><span class="b br">Hb low</span></div>
+            <p style="font-size:13px;color:var(--g6)">Haemoglobin: <span style="color:var(--r);font-weight:700">9.2 g/dL</span> · WBC: 7,400 · Platelets: 2,10,000</p>
+            <div class="ff" style="margin-top:12px;margin-bottom:0"><span class="lbl">Add comment on this report</span><textarea rows="2" placeholder="e.g. Hb low, start iron supplements..."></textarea></div>
+          </div>
+          <div class="card">
+            <div class="sec-lbl">Last Prescription (carry forward — uncheck to remove)</div>
+            <div style="padding:4px 0">
+              <div class="rx-row"><div class="rxc ck" onclick="tgR(this)"><i class="ti ti-check" style="font-size:10px"></i></div><div><div style="font-size:14px;font-weight:600">Amlodipine 5mg</div><div style="font-size:12px;color:var(--g6)">Once daily · Morning · 30 days</div></div></div>
+              <div class="rx-row"><div class="rxc ck" onclick="tgR(this)"><i class="ti ti-check" style="font-size:10px"></i></div><div><div style="font-size:14px;font-weight:600">Atorvastatin 20mg</div><div style="font-size:12px;color:var(--g6)">Once daily · Night · 30 days</div></div></div>
+              <div class="rx-row"><div class="rxc" onclick="tgR(this)"></div><div><div style="font-size:14px;font-weight:600;color:var(--g6);text-decoration:line-through">Aspirin 75mg</div><div style="font-size:12px;color:var(--r)">Removed — interaction with Warfarin</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Medical History</div>
+            <p style="font-size:13px;font-weight:600;margin-bottom:4px">Conditions</p>
+            <p style="font-size:13px;color:var(--g6)">Hypertension · Type 2 Diabetes</p>
+            <div class="sep"></div>
+            <p style="font-size:13px;font-weight:600;margin-bottom:4px">Current Medications</p>
+            <p style="font-size:13px;color:var(--g6)">Amlodipine 5mg · Metformin 500mg · Atorvastatin 20mg</p>
+          </div>
+          <div class="card">
+            <div class="sec-lbl">Actions</div>
+            <button class="btn bgh btn-full" style="margin-bottom:8px" onclick="go('s-voice')"><i class="ti ti-microphone"></i> Voice Note (Hindi / Gujarati / English)</button>
+            <button class="btn bo btn-full" style="margin-bottom:8px" onclick="go('s-rx')"><i class="ti ti-pill"></i> Write / Update Prescription</button>
+            <button class="btn bgh btn-full" style="margin-bottom:8px" onclick="go('s-lo')"><i class="ti ti-flask"></i> Order Lab Test</button>
+            <button class="btn bp btn-full" onclick="go('s-con-d')"><i class="ti ti-check"></i> Mark Consultation Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- IPD PATIENT -->
+<div class="sc" id="s-pt-ipd">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-doc')"><i class="ti ti-arrow-left"></i> Back to Dashboard</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Arjun Mehta</div><div style="font-size:12px;color:var(--g6)">Ward B · Bed 04 · Day 3 of admission</div></div><div class="topbar-actions"><button class="btn bgh bsm" onclick="go('s-voice')"><i class="ti ti-microphone"></i> Voice</button><button class="btn bo bsm" onclick="go('s-rx')"><i class="ti ti-pill"></i> Update Rx</button><button class="btn bgh bsm" onclick="go('s-lo')"><i class="ti ti-flask"></i> Lab</button><button class="btn bp bsm" onclick="go('s-dis-rev')"><i class="ti ti-logout"></i> Discharge Ready</button></div></div>
+    <div class="content">
+      <div class="bn bn-r"><i class="ti ti-activity"></i><strong>BP alert: 158/98 — above threshold. Nurse flagged 10 minutes ago.</strong></div>
+      <div class="grid-2-1">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px"><div><h3>Arjun Mehta</h3><p style="font-size:13px;color:var(--g6);margin-top:4px">45 yrs · Male · Admitted: Unstable angina</p></div><div style="text-align:right"><span class="b bt">HDFC Ergo</span><p style="font-size:11px;color:var(--g6);margin-top:3px">Pre-auth approved</p></div></div>
+            <div class="sec-lbl">Vitals Trend (last 3 readings)</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="background:var(--rl);border-radius:8px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--r)">158/98</div><div style="font-size:11px;color:var(--r)">Today Morning</div></div>
+              <div style="background:var(--al);border-radius:8px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--a)">148/92</div><div style="font-size:11px;color:var(--a)">Yesterday PM</div></div>
+              <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:800;color:var(--ink)">142/88</div><div style="font-size:11px;color:var(--g6)">Yesterday AM</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec-lbl">Daily Note</div>
+            <div class="ff"><textarea rows="4" placeholder="Type daily note, or use voice..."></textarea></div>
+            <div style="display:flex;gap:8px"><button class="btn bgh" onclick="go('s-doc')">Save Note</button><button class="btn bgh" onclick="go('s-voice')"><i class="ti ti-microphone"></i> Voice</button></div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Actions</div>
+            <button class="btn bp btn-full" style="margin-bottom:8px" onclick="go('s-dis-rev')"><i class="ti ti-logout"></i> Discharge Ready</button>
+            <button class="btn bgh btn-full" style="margin-bottom:8px" onclick="go('s-doc')"><i class="ti ti-arrows-transfer-up"></i> Transfer Patient</button>
+            <button class="btn brd btn-full" onclick="go('s-doc')"><i class="ti ti-door-exit"></i> DAMA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PRESCRIPTION -->
+<div class="sc" id="s-rx">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pt-opd')"><i class="ti ti-arrow-left"></i> Back to Patient</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Prescription</div><div style="font-size:12px;color:var(--g6)">Ramesh Sharma</div></div></div>
+    <div class="content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="bn bn-r"><i class="ti ti-alert-triangle"></i><strong>Drug interaction: Aspirin + Warfarin — bleeding risk. Aspirin removed.</strong></div>
+          <div class="sec-lbl">Carried Forward (uncheck to remove)</div>
+          <div style="padding:4px 0;margin-bottom:16px">
+            <div class="rx-row"><div class="rxc ck" onclick="tgR(this)"><i class="ti ti-check" style="font-size:10px"></i></div><div style="flex:1"><div style="font-size:14px;font-weight:600">Amlodipine 5mg</div><div style="font-size:12px;color:var(--g6)">Once daily · Morning · 30 days</div></div></div>
+            <div class="rx-row"><div class="rxc ck" onclick="tgR(this)"><i class="ti ti-check" style="font-size:10px"></i></div><div style="flex:1"><div style="font-size:14px;font-weight:600">Metformin 500mg</div><div style="font-size:12px;color:var(--g6)">Twice daily · With food · 30 days</div></div></div>
+          </div>
+          <div class="sep"></div>
+          <div class="sec-lbl">Add New Medicine</div>
+          <div class="form-row"><div class="ff"><span class="lbl">Medicine name</span><input type="text" placeholder="Search..."></div></div>
+          <div class="form-row-3"><div class="ff"><span class="lbl">Dose</span><select><option>5mg</option><option>10mg</option><option>20mg</option></select></div><div class="ff"><span class="lbl">Frequency</span><select><option>Once daily</option><option>Twice daily</option><option>SOS</option></select></div><div class="ff"><span class="lbl">Duration</span><select><option>7 days</option><option>14 days</option><option>30 days</option><option>Ongoing</option></select></div></div>
+          <button class="btn bp" onclick="go('s-con-d')"><i class="ti ti-check"></i> Save Prescription</button>
+        </div>
+        <div class="card">
+          <div class="sec-lbl">Templates</div>
+          <button class="btn bgh btn-full" style="margin-bottom:8px">Hypertension standard</button>
+          <button class="btn bgh btn-full" style="margin-bottom:8px">Diabetes standard</button>
+          <button class="btn bgh btn-full" style="margin-bottom:8px">Fever and infection</button>
+          <button class="btn bgh btn-full">Post-cardiac standard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- VOICE -->
+<div class="sc" id="s-voice">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pt-opd')"><i class="ti ti-arrow-left"></i> Back to Patient</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Voice Note</div><div style="font-size:12px;color:var(--g6)">Hindi · Gujarati · English · Mixed</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="card" style="text-align:center;padding:40px">
+        <div style="width:80px;height:80px;border-radius:50%;background:var(--rl);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:3px solid var(--r)"><i class="ti ti-microphone" style="font-size:36px;color:var(--r)"></i></div>
+        <p style="font-size:17px;font-weight:700;margin-bottom:6px">Listening...</p>
+        <p style="font-size:13px;color:var(--g6);margin-bottom:24px">Speak naturally. Hindi, Gujarati, or English.</p>
+        <div style="background:var(--g1);border-radius:10px;padding:16px;text-align:left;margin-bottom:20px"><p style="font-size:11px;color:var(--g6);margin-bottom:8px">AI TRANSCRIPTION</p><p style="font-size:14px;line-height:1.7">Patient reports chest pain since 2 days, worsening on exertion. BP elevated at 158/98. Plan: increase Amlodipine to 10mg, refer for echo, review in 1 week...</p></div>
+        <div style="display:flex;gap:12px;justify-content:center"><button class="btn bp" onclick="go('s-pt-opd')"><i class="ti ti-check"></i> Save Note</button><button class="btn bgh" onclick="go('s-pt-opd')">Discard</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- LAB ORDER -->
+<div class="sc" id="s-lo">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pt-opd')"><i class="ti ti-arrow-left"></i> Back to Patient</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Order Lab Test</div><div style="font-size:12px;color:var(--g6)">Ramesh Sharma</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="card">
+        <div class="ff"><span class="lbl">Search test</span><input type="text" placeholder="e.g. ECG, Echo, HbA1c, X-ray..."></div>
+        <div class="sec-lbl">Common Tests</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"><button class="btn bgh bsm">ECG</button><button class="btn bgh bsm">Echo</button><button class="btn bgh bsm">HbA1c</button><button class="btn bgh bsm">Lipid Profile</button><button class="btn bgh bsm">Chest X-ray</button><button class="btn bgh bsm">Urine R/M</button><button class="btn bgh bsm">CT Scan</button><button class="btn bgh bsm">MRI</button></div>
+        <div class="ff"><span class="lbl">Clinical note (optional)</span><textarea rows="2" placeholder="Reason for test or special instructions..."></textarea></div>
+        <button class="btn bp" onclick="go('s-pt-opd')"><i class="ti ti-send"></i> Send to Lab</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CONSULTATION DONE -->
+<div class="sc" id="s-con-d">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-doc')"><i class="ti ti-layout-dashboard"></i> Back to Dashboard</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Consultation Complete</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Consultation done. Patient sent to pharmacy.</span></div><div class="card"><h3 style="margin-bottom:8px">Ramesh Sharma</h3><div style="font-size:13px;color:var(--g6);line-height:2.2"><div style="display:flex;justify-content:space-between"><span>Prescription sent</span><span class="b bg">Done</span></div><div style="display:flex;justify-content:space-between"><span>Lab order sent</span><span class="b bg">Done</span></div><div style="display:flex;justify-content:space-between"><span>Pharmacy notified</span><span class="b bg">Done</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-doc')"><i class="ti ti-arrow-left"></i> Back to Queue</button></div>
+  </div>
+</div>
+</div>
+
+<!-- DISCHARGE REVIEW -->
+<div class="sc" id="s-dis-rev">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-doc')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Discharge Ready</div><div style="font-size:12px;color:var(--g6)">Vikram Shah</div></div></div>
+    <div class="content">
+      <div class="bn bn-t"><i class="ti ti-robot"></i><span>AI discharge summary generated from all admission data. Review and approve.</span></div>
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="sec-lbl">AI Discharge Summary</div>
+          <div style="background:var(--g1);border-radius:8px;padding:16px;margin-bottom:16px"><p style="font-size:14px;line-height:1.8;color:var(--ink)">Patient Vikram Shah, 51 years, admitted 21 May 2026 with unstable angina. Underwent angioplasty on 24 May. Post-procedure stable. Echo showed mild LV dysfunction. Discharged on dual antiplatelet therapy, statin, and beta blocker. Cardiology follow-up in 2 weeks with Dr. Mehta.</p></div>
+          <div class="ff"><span class="lbl">Add or correct anything</span><textarea rows="3" placeholder="Add anything the AI missed..."></textarea></div>
+          <div style="display:flex;gap:12px"><button class="btn bp" onclick="go('s-dis-d')"><i class="ti ti-check"></i> Approve and Trigger Discharge</button><button class="btn bgh" onclick="go('s-doc')">Review Again</button></div>
+        </div>
+        <div class="card">
+          <div class="sec-lbl">Discharge triggers simultaneously</div>
+          <div style="font-size:13px;color:var(--g6);line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Discharge summary</span><span class="b bg">Ready</span></div><div style="display:flex;justify-content:space-between"><span>Nurse — patient prep</span><span class="b ba">On approval</span></div><div style="display:flex;justify-content:space-between"><span>Pharmacy — discharge meds</span><span class="b ba">On approval</span></div><div style="display:flex;justify-content:space-between"><span>Billing — final bill</span><span class="b ba">On approval</span></div><div style="display:flex;justify-content:space-between"><span>WhatsApp discharge card</span><span class="b ba">After billing</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="sc" id="s-dis-d">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-doc')"><i class="ti ti-layout-dashboard"></i> Dashboard</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">SM</div><div><div class="user-name">Dr. S. Mehta</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Discharge Triggered</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Discharge triggered. All departments notified in parallel.</span></div><div class="card"><h3 style="margin-bottom:12px">Vikram Shah — Ward C · Bed 11</h3><div style="font-size:13px;color:var(--g6);line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Discharge summary</span><span class="b bg">Done</span></div><div style="display:flex;justify-content:space-between"><span>Nurse — patient prep</span><span class="b bg">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Pharmacy — discharge meds</span><span class="b bg">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Billing — final bill</span><span class="b ba">In progress</span></div><div style="display:flex;justify-content:space-between"><span>WhatsApp discharge card</span><span class="b ba">Pending billing</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-doc')"><i class="ti ti-arrow-left"></i> Back to Dashboard</button></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ NURSE ══════════════════════════ -->
+<div class="sc" id="s-nur">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="sidebar-section">Nurse</div><div class="nav-item active"><i class="ti ti-layout-dashboard"></i> Ward B</div><div class="nav-item" onclick="go('s-handover')"><i class="ti ti-transfer"></i> Shift Handover</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div><div class="user-role">Ward B · Morning</div></div></div><button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Ward B</div><div style="font-size:12px;color:var(--g6)">Morning shift · 7AM–3PM · 8 patients</div></div><div class="topbar-actions"><button class="btn brd" onclick="go('s-nur-emg')"><i class="ti ti-alert-triangle"></i> Emergency Alert</button></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">Patients in ward</div></div><div class="stat-card"><div class="stat-num" style="color:var(--a)">3</div><div class="stat-lbl">Vitals due</div></div><div class="stat-card"><div class="stat-num" style="color:var(--g)">5</div><div class="stat-lbl">Meds given</div></div><div class="stat-card"><div class="stat-num" style="color:var(--r)">1</div><div class="stat-lbl">Alert</div></div></div>
+      <div class="bn bn-r"><i class="ti ti-activity"></i><strong>Arjun Mehta — Bed 04 — BP 158/98. Doctor notified.</strong></div>
+      <div class="card">
+        <div class="card-header"><h3>Ward B Patients</h3></div>
+        <table class="table">
+          <thead><tr><th>Bed</th><th>Patient</th><th>Condition</th><th>Vitals</th><th>Meds</th><th>Alert</th><th></th></tr></thead>
+          <tbody>
+            <tr onclick="go('s-nur-pt')"><td><b>Bed 04</b></td><td><div class="card-title">Arjun Mehta</div><div class="card-sub">45 yrs · Day 3 · Unstable angina</div></td><td style="font-size:12px">Unstable angina</td><td><span class="b br">Overdue</span></td><td><span class="b bg">Given</span></td><td><span class="b br"><i class="ti ti-activity" style="font-size:9px"></i> BP high</span></td><td><button class="btn bsm bp" onclick="go('s-nur-pt')">Open</button></td></tr>
+            <tr onclick="go('s-nur-s')"><td><b>Bed 01</b></td><td><div class="card-title">Meera Iyer</div><div class="card-sub">28 yrs · Day 1 · Post-op</div></td><td style="font-size:12px">Post-op recovery</td><td><span class="b bg">Done</span></td><td><span class="b bg">Given</span></td><td><span class="b bg">Stable</span></td><td><button class="btn bsm bgh" onclick="go('s-nur-s')">Open</button></td></tr>
+            <tr onclick="go('s-nur')"><td><b>Bed 06</b></td><td><div class="card-title">Sunita Rao</div><div class="card-sub">62 yrs · Day 2</div></td><td style="font-size:12px">Hypertension</td><td><span class="b ba">Due soon</span></td><td><span class="b bg">Given</span></td><td><span class="b bg">Stable</span></td><td><button class="btn bsm bgh">Open</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-nur-pt">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur')"><i class="ti ti-arrow-left"></i> Back to Ward</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Arjun Mehta</div><div style="font-size:12px;color:var(--g6)">Bed 04 · Day 3 · Unstable angina</div></div><div class="topbar-actions"><button class="btn brd" onclick="go('s-nur-emg')"><i class="ti ti-alert-triangle"></i> Emergency</button></div></div>
+    <div class="content">
+      <div class="bn bn-r"><i class="ti ti-activity"></i><strong>BP 158/98 — above threshold. Flagged to Dr. Mehta 10 minutes ago.</strong></div>
+      <div class="bn bn-a"><i class="ti ti-clock"></i><strong>Vitals overdue — last entered 6 hours ago.</strong></div>
+      <div class="grid-2-1">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Enter Vitals</div>
+            <div class="form-row-3"><div class="ff"><span class="lbl">Blood pressure</span><input type="text" value="158/98" style="border-color:var(--r)"><div class="hint" style="color:var(--r)">mmHg · High</div></div><div class="ff"><span class="lbl">Pulse</span><input type="number" placeholder="— bpm"></div><div class="ff"><span class="lbl">Temperature</span><input type="number" placeholder="— °F"></div></div>
+            <div class="form-row-3"><div class="ff"><span class="lbl">SpO2</span><input type="number" placeholder="— %"></div></div>
+            <button class="btn bp" onclick="go('s-vsaved')"><i class="ti ti-check"></i> Save Vitals</button>
+          </div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Medicines</div>
+            <table class="table"><thead><tr><th>Medicine</th><th>Dose / Frequency</th><th>Status</th></tr></thead><tbody>
+              <tr><td>Amlodipine 5mg</td><td>Once daily · Morning</td><td><span class="tap td2">Given</span></td></tr>
+              <tr><td>Metoprolol 25mg</td><td>Twice daily · Morning</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Given'">Mark given</button></td></tr>
+            </tbody></table>
+            <button class="btn bgh" style="margin-top:12px" onclick="go('s-not-given')">Mark a medicine not given</button>
+          </div>
+          <div class="card">
+            <div class="sec-lbl">Shift Tasks</div>
+            <table class="table"><tbody>
+              <tr><td>IV line checked</td><td style="text-align:right"><span class="tap td2">Done</span></td></tr>
+              <tr><td>Patient repositioned</td><td style="text-align:right"><button class="tap tt" onclick="this.className='tap td2';this.textContent='Done'">Tap to mark</button></td></tr>
+              <tr><td>Dressing changed</td><td style="text-align:right"><button class="tap tt" onclick="this.className='tap td2';this.textContent='Done'">Tap to mark</button></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Doctor Notes (read only)</div>
+            <p style="font-size:13px;color:var(--g6);margin-bottom:6px">Dr. Mehta · This morning</p>
+            <p style="font-size:14px;line-height:1.7">BP trending up over 3 days. Increase Metoprolol to 50mg from tomorrow. Monitor closely. Echo scheduled for afternoon.</p>
+          </div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Add Nursing Note</div>
+            <div class="ff"><textarea rows="3" placeholder="Add your nursing observation..."></textarea></div>
+            <button class="btn bgh btn-full" onclick="go('s-nur')">Save Note</button>
+          </div>
+          <div class="card">
+            <div class="sec-lbl">Flag for Doctor</div>
+            <button class="btn bo btn-full" onclick="go('s-flag-doc')"><i class="ti ti-flag"></i> Flag to Doctor</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-nur-s">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur')"><i class="ti ti-arrow-left"></i> Back to Ward</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Meera Iyer</div><div style="font-size:12px;color:var(--g6)">Bed 01 · Day 1 · Post-op</div></div><div class="topbar-actions"><button class="btn brd" onclick="go('s-nur-emg')"><i class="ti ti-alert-triangle"></i> Emergency</button></div></div>
+    <div class="content">
+      <div class="bn bn-g"><i class="ti ti-circle-check"></i><span>All vitals normal. Meds given. Shift tasks complete.</span></div>
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="sec-lbl">Vitals (last entered)</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">
+            <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">118/76</div><div style="font-size:11px;color:var(--g6)">BP mmHg</div></div>
+            <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">72</div><div style="font-size:11px;color:var(--g6)">Pulse bpm</div></div>
+            <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">98.4</div><div style="font-size:11px;color:var(--g6)">Temp °F</div></div>
+            <div style="background:var(--g1);border-radius:8px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:800;color:var(--ink)">99%</div><div style="font-size:11px;color:var(--g6)">SpO2</div></div>
+          </div>
+          <div class="sec-lbl">Doctor Notes (read only)</div>
+          <p style="font-size:14px;line-height:1.7">Post-op Day 1. Stable. Continue current medications. Encourage ambulation. Discharge likely tomorrow if stable.</p>
+          <div class="sep"></div>
+          <div class="sec-lbl">Add Nursing Note</div>
+          <div class="ff"><textarea rows="3" placeholder="Add nursing observation..."></textarea></div>
+          <div style="display:flex;gap:8px"><button class="btn bgh" onclick="go('s-nur')">Save Note</button><button class="btn bo" onclick="go('s-flag-doc')"><i class="ti ti-flag"></i> Flag Doctor</button></div>
+        </div>
+        <div class="card"><div class="sec-lbl">Quick Update Vitals</div><button class="btn bgh btn-full" onclick="go('s-nur')">Update vitals</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-vsaved">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur')"><i class="ti ti-layout-dashboard"></i> Back to Ward</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Vitals Saved</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Vitals saved. BP 158/98 flagged — Dr. Mehta notified automatically.</span></div><button class="btn bp" onclick="go('s-nur-pt')"><i class="ti ti-arrow-left"></i> Continue Patient Tasks</button></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-flag-doc">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur-pt')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Flag for Doctor</div><div style="font-size:12px;color:var(--g6)">Arjun Mehta · Bed 04</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Doctor will be notified immediately on their phone.</span></div><div class="card"><div class="sec-lbl">Quick reasons</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"><button class="btn bgh bsm">Patient in pain</button><button class="btn bgh bsm">Abnormal reading</button><button class="btn bgh bsm">Medication concern</button><button class="btn bgh bsm">Family request</button></div><div class="ff"><span class="lbl">Additional message (optional)</span><textarea rows="3" placeholder="Describe what you observed..."></textarea></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-nur')"><i class="ti ti-send"></i> Send Flag to Doctor</button><button class="btn bgh" onclick="go('s-nur-pt')">Cancel</button></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-not-given">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur-pt')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Medicine Not Given</div><div style="font-size:12px;color:var(--g6)">Arjun Mehta</div></div></div>
+    <div class="content" style="max-width:600px"><div class="card"><div class="form-row"><div class="ff"><span class="lbl">Which medicine?</span><select><option>Amlodipine 5mg</option><option>Metoprolol 25mg</option></select></div><div class="ff"><span class="lbl">Reason</span><select><option>Patient refused</option><option>Medicine not available</option><option>Patient vomiting</option><option>Doctor advised to hold</option></select></div></div><div class="ff"><span class="lbl">Note (optional)</span><textarea rows="2" placeholder="Additional context..."></textarea></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-nur-pt')"><i class="ti ti-check"></i> Save and Notify Doctor</button><button class="btn bgh" onclick="go('s-nur-pt')">Cancel</button></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-nur-emg">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur')"><i class="ti ti-layout-dashboard"></i> Back to Ward</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title" style="color:var(--r)">Emergency Alert Sent</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-r" style="font-weight:700"><i class="ti ti-alert-triangle"></i><span>Duty doctor, senior nurse, and ward supervisor notified simultaneously.</span></div><div class="card"><div style="font-size:13px;color:var(--g6);line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Duty doctor</span><span class="b br">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Senior nurse</span><span class="b br">Notified</span></div><div style="display:flex;justify-content:space-between"><span>Ward supervisor</span><span class="b br">Notified</span></div></div></div><p style="font-size:13px;color:var(--g6);margin-top:12px">Stay with the patient. Help is on the way.</p><button class="btn bp" style="margin-top:16px" onclick="go('s-nur')"><i class="ti ti-arrow-left"></i> Back to Ward</button></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-handover">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-nur')"><i class="ti ti-arrow-left"></i> Back to Ward</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">KN</div><div><div class="user-name">Kavita Nair</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Shift Handover</div><div style="font-size:12px;color:var(--g6)">Ward B · Morning to Afternoon</div></div></div>
+    <div class="content">
+      <div class="bn bn-t"><i class="ti ti-robot"></i><span>AI has compiled your shift summary from all entries. Review and confirm.</span></div>
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="sec-lbl">AI Shift Summary</div>
+          <div style="background:var(--g1);border-radius:8px;padding:16px;margin-bottom:16px"><p style="font-size:12px;color:var(--g6);margin-bottom:8px">Ward B · Morning shift · Nurse Kavita · 7AM–3PM</p><p style="font-size:14px;line-height:1.8">8 patients in ward. All vitals recorded except Bed 09 (Rajan Patel — pending). Arjun Mehta (Bed 04): BP 158/98, flagged to Dr. Mehta. Metoprolol dose increase noted. Echo scheduled PM. Meera Iyer (Bed 01): Post-op Day 1, stable. All medicines given except Aspirin for Bed 09 (patient refused, doctor notified).</p></div>
+          <div class="ff"><span class="lbl">Anything to add?</span><textarea rows="2" placeholder="Additional handover notes..."></textarea></div>
+          <div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-nur')"><i class="ti ti-check"></i> Confirm and Hand Over</button><button class="btn bgh" onclick="go('s-nur')">Edit First</button></div>
+        </div>
+        <div class="card"><div class="sec-lbl">Incoming Nurse</div><p style="font-size:14px;font-weight:600">Deepa Sharma</p><p style="font-size:12px;color:var(--g6);margin-top:2px">Afternoon shift · 3PM–11PM</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ PHARMACY ══════════════════════════ -->
+<div class="sc" id="s-pharm">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="sidebar-section">Pharmacy</div><div class="nav-item active"><i class="ti ti-layout-dashboard"></i> All Orders</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div><div class="user-role">Pharmacist</div></div></div><button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Pharmacy</div><div style="font-size:12px;color:var(--g6)">Sunrise Hospital · Pooja Mishra</div></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num" style="color:var(--a)">4</div><div class="stat-lbl">Pending orders</div></div><div class="stat-card"><div class="stat-num" style="color:var(--t)">2</div><div class="stat-lbl">Discharge ready</div></div><div class="stat-card"><div class="stat-num" style="color:var(--g)">12</div><div class="stat-lbl">Dispensed today</div></div></div>
+      <div class="tabs"><button class="tab on" onclick="swP('w',this)">Ward Orders</button><button class="tab" onclick="swP('d',this)">Discharge</button><button class="tab" onclick="swP('i',this)">IV / Injectables</button></div>
+      <div id="pw">
+        <div class="card">
+          <table class="table"><thead><tr><th>Patient</th><th>Ward/Bed</th><th>Medicines</th><th>Doctor</th><th>Time</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr onclick="go('s-ph-ord')"><td><b>Arjun Mehta</b></td><td>Ward B · Bed 04</td><td>3 medicines</td><td>Dr. Mehta</td><td>9:15 AM</td><td><span class="b ba">Pending</span></td><td><button class="btn bsm bp" onclick="go('s-ph-ord')">Open</button></td></tr>
+            <tr onclick="go('s-ph-na')"><td><b>Meera Iyer</b></td><td>Ward A · Bed 01</td><td>2 medicines</td><td>Dr. Mehta</td><td>9:30 AM</td><td><span class="b ba">Pending</span></td><td><button class="btn bsm bp" onclick="go('s-ph-na')">Open</button></td></tr>
+            <tr onclick="go('s-pharm')"><td><b>Sunita Rao</b></td><td>Ward B · Bed 06</td><td>2 medicines</td><td>Dr. Patel</td><td>8:45 AM</td><td><span class="b bg">Dispensed</span></td><td><button class="btn bsm bgh">View</button></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div id="pd" style="display:none"><div class="card"><table class="table"><thead><tr><th>Patient</th><th>Ward/Bed</th><th>Medicines</th><th>Status</th><th></th></tr></thead><tbody><tr onclick="go('s-ph-dis')"><td><b>Vikram Shah</b></td><td>Ward C · Bed 11</td><td>4 take-home</td><td><span class="b ba">Pack pending</span></td><td><button class="btn bsm bp" onclick="go('s-ph-dis')">Open</button></td></tr></tbody></table></div></div>
+      <div id="pi" style="display:none"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>All IV dispensing is auto-added to the patient bill. No separate billing entry needed.</span></div><div class="card"><table class="table"><thead><tr><th>Patient</th><th>Ward/Bed</th><th>IV Orders</th><th>Status</th><th></th></tr></thead><tbody><tr onclick="go('s-ph-iv')"><td><b>Arjun Mehta</b></td><td>Ward B · Bed 04</td><td>2 IV orders</td><td><span class="b ba">Pending</span></td><td><button class="btn bsm bp" onclick="go('s-ph-iv')">Open</button></td></tr></tbody></table></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-ph-ord">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pharm')"><i class="ti ti-arrow-left"></i> Back to Pharmacy</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Arjun Mehta</div><div style="font-size:12px;color:var(--g6)">Ward B · Bed 04 · Dr. Mehta · 9:15 AM</div></div></div>
+    <div class="content">
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="sec-lbl">Prescription</div>
+          <table class="table"><thead><tr><th>Medicine</th><th>Dose / Frequency</th><th>Duration</th><th>Action</th></tr></thead><tbody>
+            <tr><td><b>Amlodipine 5mg</b></td><td>Once daily · Morning</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Dispensed'">Dispense</button></td></tr>
+            <tr><td><b>Metoprolol 25mg</b></td><td>Twice daily</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Dispensed'">Dispense</button></td></tr>
+            <tr><td><b>Atorvastatin 20mg</b></td><td>Once daily · Night</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Dispensed'">Dispense</button></td></tr>
+          </tbody></table>
+          <div style="display:flex;gap:8px;margin-top:16px"><button class="btn bp" onclick="go('s-ph-done')"><i class="ti ti-check"></i> Mark All Dispensed</button><button class="btn bo" onclick="go('s-ph-flag')"><i class="ti ti-flag"></i> Flag to Doctor</button></div>
+        </div>
+        <div class="card"><div class="sec-lbl">Patient Info</div><p style="font-size:14px;font-weight:600">Arjun Mehta</p><p style="font-size:12px;color:var(--g6);margin-top:2px">Ward B · Bed 04 · HDFC Ergo</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-ph-na">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pharm')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Meera Iyer</div><div style="font-size:12px;color:var(--g6)">Ward A · Bed 01</div></div></div>
+    <div class="content" style="max-width:800px"><div class="card"><div class="sec-lbl">Prescription</div><table class="table"><thead><tr><th>Medicine</th><th>Dose</th><th>Duration</th><th>Status</th></tr></thead><tbody><tr><td><b>Pantoprazole 40mg</b></td><td>Once daily · Empty stomach</td><td>14 days</td><td><span class="tap td2">Dispensed</span></td></tr><tr><td><b>Tramadol 50mg</b></td><td>SOS · As needed for pain</td><td>—</td><td><span class="tap" style="background:var(--rl);color:var(--r);border:none;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:700">Not available</span></td></tr></tbody></table><div class="bn bn-a" style="margin-top:14px"><i class="ti ti-info-circle"></i><span>Tramadol 50mg marked as not available. Noted on patient record. Doctor not notified (no action needed).</span></div><button class="btn bp" onclick="go('s-ph-done')"><i class="ti ti-check"></i> Confirm and Close</button></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-ph-iv">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pharm')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Arjun Mehta — IV Orders</div><div style="font-size:12px;color:var(--g6)">Ward B · Bed 04</div></div></div>
+    <div class="content" style="max-width:800px"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Each item dispensed is automatically added to the patient bill. No separate billing entry needed.</span></div><div class="card"><div class="sec-lbl">IV and Injectable Orders</div><table class="table"><thead><tr><th>Item</th><th>Instruction</th><th>Auto-billed</th><th>Action</th></tr></thead><tbody><tr><td><b>Normal Saline 500ml</b></td><td>IV infusion · 8 hourly · 2 bottles</td><td style="font-weight:700;color:var(--g)">₹180</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Dispensed · Billed'">Dispense</button></td></tr><tr><td><b>Inj. Pantoprazole 40mg</b></td><td>IV · Once daily · 3 days</td><td style="color:var(--g6)">Pending</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Dispensed · Billed'">Dispense</button></td></tr></tbody></table><button class="btn bp" style="margin-top:16px" onclick="go('s-ph-done')"><i class="ti ti-check"></i> Confirm Dispensed</button></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-ph-dis">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pharm')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Vikram Shah — Discharge Medicines</div><div style="font-size:12px;color:var(--g6)">Ward C · Bed 11 · Pack for patient collection</div></div></div>
+    <div class="content" style="max-width:800px"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Pack all medicines for patient to collect at pharmacy counter before leaving.</span></div><div class="card"><div class="sec-lbl">Take-Home Prescription</div><table class="table"><thead><tr><th>Medicine</th><th>Dose</th><th>Duration</th><th>Action</th></tr></thead><tbody><tr><td><b>Aspirin 75mg</b></td><td>Once daily · Morning</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Packed'">Pack</button></td></tr><tr><td><b>Clopidogrel 75mg</b></td><td>Once daily · Morning</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Packed'">Pack</button></td></tr><tr><td><b>Atorvastatin 40mg</b></td><td>Once daily · Night</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Packed'">Pack</button></td></tr><tr><td><b>Metoprolol 50mg</b></td><td>Twice daily</td><td>30 days</td><td><button class="tap tt" onclick="this.className='tap td2';this.textContent='Packed'">Pack</button></td></tr></tbody></table><button class="btn bp" style="margin-top:16px" onclick="go('s-ph-done')"><i class="ti ti-check"></i> All Packed — Ready for Collection</button></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-ph-flag">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-ph-ord')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Flag to Doctor</div><div style="font-size:12px;color:var(--g6)">Arjun Mehta</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Doctor will be notified immediately on their phone.</span></div><div class="card"><div class="ff"><span class="lbl">Concern about this prescription</span><textarea rows="3" placeholder="Describe your concern..."></textarea></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-pharm')"><i class="ti ti-send"></i> Send to Doctor</button><button class="btn bgh" onclick="go('s-ph-ord')">Cancel</button></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-ph-done">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-pharm')"><i class="ti ti-layout-dashboard"></i> Back to Pharmacy</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">PM</div><div><div class="user-name">Pooja Mishra</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Medicines Dispensed</div></div></div>
+    <div class="content" style="max-width:700px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Medicines dispensed. Patient record updated. Amount auto-added to bill.</span></div>
+      <div class="inv">
+        <div class="inv-header"><div class="inv-title">Sunrise Hospital</div><div style="font-size:12px;color:var(--g6);margin-top:3px">Pharmacy Invoice · 26 May 2026 · Arjun Mehta · Ward B Bed 04</div></div>
+        <table class="table"><thead><tr><th>Medicine</th><th style="text-align:right">Amount</th></tr></thead><tbody>
+          <tr><td>Amlodipine 5mg × 30</td><td style="text-align:right;font-weight:600">₹180</td></tr>
+          <tr><td>Metoprolol 25mg × 60</td><td style="text-align:right;font-weight:600">₹240</td></tr>
+          <tr><td>Atorvastatin 20mg × 30</td><td style="text-align:right;font-weight:600">₹420</td></tr>
+        </tbody></table>
+        <div class="totrow"><span style="font-size:16px;font-weight:700">Total</span><span style="font-size:22px;font-weight:800">₹840</span></div>
+        <p style="font-size:12px;color:var(--g6);margin-top:8px;text-align:center">Auto-added to patient bill</p>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px"><button class="btn bo"><i class="ti ti-printer"></i> Print Invoice</button><button class="btn bgh" onclick="go('s-pharm')"><i class="ti ti-arrow-left"></i> Back to Pharmacy</button></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ LAB ══════════════════════════ -->
+<div class="sc" id="s-lab">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="sidebar-section">Lab and Radiology</div><div class="nav-item active"><i class="ti ti-flask"></i> All Orders</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RK</div><div><div class="user-name">Ravi Kumar</div><div class="user-role">Lab Technician</div></div></div><button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Lab and Radiology</div></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num" style="color:var(--a)">5</div><div class="stat-lbl">Pending orders</div></div><div class="stat-card"><div class="stat-num" style="color:var(--g)">8</div><div class="stat-lbl">Uploaded today</div></div></div>
+      <div class="tabs"><button class="tab on" onclick="swL('p',this)">Pending</button><button class="tab" onclick="swL('d',this)">Uploaded Today</button></div>
+      <div id="lp"><div class="card"><table class="table"><thead><tr><th>Patient</th><th>Location</th><th>Test</th><th>Type</th><th>Doctor</th><th>Time</th><th>Status</th><th></th></tr></thead><tbody>
+        <tr onclick="go('s-lb-bl')"><td><b>Ramesh Sharma</b></td><td>OPD · Token C-14</td><td>CBC, Lipid profile</td><td>Blood test</td><td>Dr. Mehta</td><td>9:42 AM</td><td><span class="b ba">Sample pending</span></td><td><button class="btn bsm bp" onclick="go('s-lb-bl')">Open</button></td></tr>
+        <tr onclick="go('s-lb-xr')"><td><b>Arjun Mehta</b></td><td>Ward B · Bed 04</td><td>Chest X-ray</td><td>Radiology</td><td>Dr. Mehta</td><td>9:15 AM</td><td><span class="b bt">Sample collected</span></td><td><button class="btn bsm bp" onclick="go('s-lb-xr')">Upload</button></td></tr>
+        <tr onclick="go('s-lb-bl')"><td><b>Sunita Rao</b></td><td>Ward B · Bed 06</td><td>MRI Brain</td><td>Radiology</td><td>Dr. Patel</td><td>10:00 AM</td><td><span class="b ba">Sample pending</span></td><td><button class="btn bsm bp">Open</button></td></tr>
+        <tr onclick="go('s-lab')"><td><b>Meera Iyer</b></td><td>Ward A · Bed 01</td><td>HbA1c, Urine R/M</td><td>Blood test</td><td>Dr. Mehta</td><td>9:30 AM</td><td><span class="b ba">Sample pending</span></td><td><button class="btn bsm bgh">Open</button></td></tr>
+      </tbody></table></div></div>
+      <div id="ld" style="display:none"><div class="card"><table class="table"><thead><tr><th>Patient</th><th>Test</th><th>Uploaded</th><th>Visible to</th></tr></thead><tbody>
+        <tr><td><b>Vikram Shah</b></td><td>ECG</td><td>8:30 AM · Doctor notified</td><td>Doctor · Nurse · Billing</td></tr>
+        <tr><td><b>Rajan Patel</b></td><td>CBC, HbA1c</td><td>8:45 AM · Doctor notified</td><td>Doctor · Nurse · Billing</td></tr>
+      </tbody></table></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-lb-bl">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-lab')"><i class="ti ti-arrow-left"></i> Back to Lab</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RK</div><div><div class="user-name">Ravi Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Ramesh Sharma</div><div style="font-size:12px;color:var(--g6)">OPD · CBC, Lipid profile · Dr. Mehta</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="card">
+        <div class="sec-lbl">Steps</div>
+        <div style="padding:4px 0;margin-bottom:16px">
+          <div class="stp"><div class="stpn spa">1</div><div><p style="font-size:14px;font-weight:600">Mark sample collected</p><p style="font-size:12px;color:var(--g6)">Confirm blood sample taken from patient</p></div></div>
+          <div class="stp"><div class="stpn spp">2</div><div><p style="font-size:14px;color:var(--g6)">Upload report (PDF or image)</p></div></div>
+          <div class="stp"><div class="stpn spp">3</div><div><p style="font-size:14px;color:var(--g6)">Doctor notified automatically</p></div></div>
+        </div>
+        <div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-lb-up')"><i class="ti ti-check"></i> Mark Sample Collected</button><button class="btn bgh" onclick="go('s-lab')">Back</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-lb-xr">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-lab')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RK</div><div><div class="user-name">Ravi Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Arjun Mehta — Chest X-ray</div><div style="font-size:12px;color:var(--g6)">Ward B · Bed 04 · Sample collected</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Sample already collected. Upload the X-ray report.</span></div>
+      <div class="card">
+        <div class="form-row" style="margin-bottom:16px"><div class="ff"><span class="lbl">Report type</span><select><option>X-ray</option><option>Blood report</option><option>CT scan</option><option>MRI</option></select></div></div>
+        <div class="ub" onclick="go('s-lb-done')"><i class="ti ti-cloud-upload"></i><p>Click to upload report</p><small>PDF or image · Blood report, X-ray, CT scan, MRI, ECG</small></div>
+        <button class="btn bgh" onclick="go('s-lab')">Save and upload later</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-lb-up">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-lb-bl')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RK</div><div><div class="user-name">Ravi Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Upload Report</div><div style="font-size:12px;color:var(--g6)">Ramesh Sharma · CBC, Lipid profile</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Sample collected. Upload the report when ready. Doctor notified instantly on upload.</span></div>
+      <div class="card">
+        <div class="form-row" style="margin-bottom:16px"><div class="ff"><span class="lbl">Report type</span><select><option>Blood report</option><option>X-ray</option><option>CT scan</option><option>MRI</option><option>ECG</option></select></div></div>
+        <div class="ub" onclick="go('s-lb-done')"><i class="ti ti-cloud-upload"></i><p>Click to upload report</p><small>PDF or image file</small></div>
+        <button class="btn bgh" onclick="go('s-lab')">Save and upload later</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-lb-done">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-lab')"><i class="ti ti-layout-dashboard"></i> Back to Lab</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">RK</div><div><div class="user-name">Ravi Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Report Uploaded</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Report uploaded. Doctor and nurse notified instantly.</span></div><div class="card"><div style="font-size:13px;color:var(--g6);line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Patient</span><span style="font-weight:600;color:var(--ink)">Ramesh Sharma</span></div><div style="display:flex;justify-content:space-between"><span>Report</span><span style="font-weight:600;color:var(--ink)">CBC, Lipid profile</span></div><div style="display:flex;justify-content:space-between"><span>Visible to</span><span style="font-weight:600;color:var(--ink)">Doctor · Nurse · Billing</span></div><div style="display:flex;justify-content:space-between"><span>Doctor notified</span><span class="b bg">Sent</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-lab')"><i class="ti ti-arrow-left"></i> Back to Lab</button></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ BILLING ══════════════════════════ -->
+<div class="sc" id="s-bill">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="sidebar-section">Billing</div><div class="nav-item active"><i class="ti ti-receipt"></i> Pending Bills</div><div class="nav-item" onclick="go('s-bill-claims')"><i class="ti ti-shield-check"></i> Claims</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div><div class="user-role">Billing</div></div></div><button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Billing and Claims</div></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num" style="color:var(--a)">5</div><div class="stat-lbl">Bills pending</div></div><div class="stat-card"><div class="stat-num" style="color:var(--g)">₹3.2L</div><div class="stat-lbl">Collected today</div></div><div class="stat-card"><div class="stat-num" style="color:var(--a)">₹4.8L</div><div class="stat-lbl">Insurance pending</div></div><div class="stat-card"><div class="stat-num" style="color:var(--r)">₹1.5L</div><div class="stat-lbl">Outstanding</div></div></div>
+      <div class="card">
+        <div class="card-header"><h3>Pending Bills</h3></div>
+        <table class="table"><thead><tr><th>Patient</th><th>Type</th><th>Details</th><th>Total</th><th>Insurance</th><th></th></tr></thead><tbody>
+          <tr onclick="go('s-bil-ins')"><td><b>Vikram Shah</b></td><td>IPD Discharge</td><td>Ward C · 5 days</td><td style="font-weight:700">₹42,800</td><td><span class="b bt">Star Health</span></td><td><button class="btn bsm bp" onclick="go('s-bil-ins')">Open Bill</button></td></tr>
+          <tr onclick="go('s-bil-sp')"><td><b>Priya Desai</b></td><td>OPD</td><td>Gen. Medicine</td><td style="font-weight:700">₹1,200</td><td><span class="b bx">Self Pay</span></td><td><button class="btn bsm bp" onclick="go('s-bil-sp')">Open Bill</button></td></tr>
+          <tr onclick="go('s-bil-sp')"><td><b>Ramesh Yadav</b></td><td>IPD Discharge</td><td>Ward A · 3 days</td><td style="font-weight:700">₹28,400</td><td><span class="b bg">PMJAY</span></td><td><button class="btn bsm bp">Open Bill</button></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-bill-claims">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="sidebar-section">Billing</div><div class="nav-item" onclick="go('s-bill')"><i class="ti ti-receipt"></i> Pending Bills</div><div class="nav-item active"><i class="ti ti-shield-check"></i> Claims</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div><button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Claims</div></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num">84</div><div class="stat-lbl">Filed this month</div></div><div class="stat-card"><div class="stat-num" style="color:var(--g)">71</div><div class="stat-lbl">Approved</div></div><div class="stat-card"><div class="stat-num" style="color:var(--a)">8</div><div class="stat-lbl">Under review</div></div><div class="stat-card"><div class="stat-num" style="color:var(--r)">5</div><div class="stat-lbl">Rejected</div></div></div>
+      <div class="card"><table class="table"><thead><tr><th>Patient</th><th>Insurer</th><th>Filed</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>
+        <tr onclick="go('s-bill-claims')"><td><b>Arjun Mehta</b></td><td>HDFC Ergo</td><td>24 May</td><td style="font-weight:700">₹45,000</td><td><span class="b bt">Under review</span></td><td></td></tr>
+        <tr onclick="go('s-bill-claims')"><td><b>Sunita Rao</b></td><td>New India</td><td>22 May</td><td style="font-weight:700">₹31,200</td><td><span class="b bg">Approved</span></td><td></td></tr>
+        <tr onclick="go('s-rej')"><td><b>Meera Iyer</b></td><td>Star Health</td><td>20 May</td><td style="font-weight:700">₹18,500</td><td><span class="b br">Rejected</span></td><td><button class="btn bsm brd" onclick="go('s-rej')">Action needed</button></td></tr>
+        <tr onclick="go('s-bill-claims')"><td><b>Rajan Patel</b></td><td>PMJAY</td><td>19 May</td><td style="font-weight:700">₹22,000</td><td><span class="b bt">Under review</span></td><td></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-bil-ins">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bill')"><i class="ti ti-arrow-left"></i> Back to Billing</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Vikram Shah</div><div style="font-size:12px;color:var(--g6)">Ward C · Bed 11 · Star Health · Pre-auth approved</div></div></div>
+    <div class="content">
+      <div class="tabs"><button class="tab on" onclick="swBI('b',this)">Bill</button><button class="tab" onclick="swBI('s',this)">Discharge Summary</button><button class="tab" onclick="swBI('c',this)">Claim</button></div>
+      <div id="bib">
+        <div class="grid-2-1">
+          <div class="card">
+            <div class="sec-lbl">Auto-compiled charges</div>
+            <table class="table"><thead><tr><th>Item</th><th>Details</th><th style="text-align:right">Amount</th></tr></thead><tbody>
+              <tr><td><b>Doctor charges</b></td><td>Dr. Mehta — consultation + procedure</td><td style="text-align:right;font-weight:700">₹8,000</td></tr>
+              <tr><td><b>Ward charges</b></td><td>Ward C Semi-private · 5 days · ₹1,500/day</td><td style="text-align:right;font-weight:700">₹7,500</td></tr>
+              <tr><td><b>OT charges</b></td><td>Angioplasty · 24 May</td><td style="text-align:right;font-weight:700">₹18,000</td></tr>
+              <tr><td><b>Pharmacy</b></td><td>14 items dispensed</td><td style="text-align:right;font-weight:700">₹4,200</td></tr>
+              <tr><td><b>Lab charges</b></td><td>CBC, Echo, Lipid profile, ECG</td><td style="text-align:right;font-weight:700">₹3,800</td></tr>
+              <tr><td><b>Additional</b></td><td>Oxygen, consumables</td><td style="text-align:right;font-weight:700">₹1,300</td></tr>
+            </tbody></table>
+            <div class="totrow"><span style="font-size:16px;font-weight:700">Total</span><span style="font-size:24px;font-weight:800">₹42,800</span></div>
+            <div class="bn bn-t" style="margin-top:14px"><i class="ti ti-info-circle"></i><span>Star Health pre-auth approved ₹40,000. Patient liable for ₹2,800 balance.</span></div>
+            <button class="btn bp" onclick="swBI('c',null)"><i class="ti ti-arrow-right"></i> Proceed to Claim</button>
+          </div>
+          <div class="card"><div class="sec-lbl">Insurance Details</div><p style="font-size:15px;font-weight:600">Star Health</p><p style="font-size:12px;color:var(--g6);margin-top:2px">Policy: SH-2024-88421</p><div class="sep"></div><div class="sec-lbl">Pre-auth</div><span class="b bg">Approved · SA-2026-4821</span></div>
+        </div>
+      </div>
+      <div id="bis" style="display:none"><div class="card"><div class="sec-lbl">Discharge Summary (read only)</div><p style="font-size:12px;color:var(--g6);margin-bottom:10px">Dr. Mehta · Approved 26 May 2026</p><p style="font-size:14px;line-height:1.8">Patient Vikram Shah, 51 years, admitted 21 May 2026 with unstable angina. Underwent angioplasty on 24 May. Post-procedure stable. Echo: mild LV dysfunction. Discharged on dual antiplatelet therapy. Follow-up in 2 weeks.</p><div class="sep"></div><p style="font-size:13px;color:var(--g6)">Procedures: Angioplasty · Stent placement · Admission: 21 May · Discharge: 26 May · 5 days</p></div></div>
+      <div id="bic" style="display:none">
+        <div class="grid-2-1">
+          <div class="card"><div class="bn bn-t"><i class="ti ti-robot"></i><span>AI has assembled the claim package. All required documents verified.</span></div><div class="sec-lbl">Claim package</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Discharge summary</span><span class="b bg">Ready</span></div><div style="display:flex;justify-content:space-between"><span>Final bill</span><span class="b bg">Ready</span></div><div style="display:flex;justify-content:space-between"><span>Investigation reports</span><span class="b bg">Ready</span></div><div style="display:flex;justify-content:space-between"><span>Pharmacy bills</span><span class="b bg">Ready</span></div><div style="display:flex;justify-content:space-between"><span>Consent forms</span><span class="b bg">Ready</span></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-cf')"><i class="ti ti-send"></i> File Claim via NHCX</button></div>
+          <div class="card"><div class="sec-lbl">Claim summary</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Claim amount</span><span style="font-weight:700">₹42,800</span></div><div style="display:flex;justify-content:space-between"><span>Pre-auth approved</span><span style="font-weight:700;color:var(--g)">₹40,000</span></div><div style="display:flex;justify-content:space-between"><span>Patient balance</span><span style="font-weight:700;color:var(--a)">₹2,800</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-bil-sp">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bill')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Priya Desai</div><div style="font-size:12px;color:var(--g6)">OPD · Self Pay</div></div></div>
+    <div class="content">
+      <div class="grid-2-1">
+        <div class="card">
+          <div class="sec-lbl">Bill</div>
+          <table class="table"><thead><tr><th>Item</th><th>Details</th><th style="text-align:right">Amount</th></tr></thead><tbody>
+            <tr><td><b>Doctor charges</b></td><td>Dr. Patel — OPD consultation</td><td style="text-align:right;font-weight:700">₹800</td></tr>
+            <tr><td><b>Lab charges</b></td><td>CBC, CRP</td><td style="text-align:right;font-weight:700">₹400</td></tr>
+          </tbody></table>
+          <div class="totrow"><span style="font-size:16px;font-weight:700">Total</span><span style="font-size:24px;font-weight:800">₹1,200</span></div>
+          <div class="sep"></div>
+          <div class="sec-lbl">Collect Payment</div>
+          <div class="pgrid">
+            <button class="pb" onclick="go('s-paid')"><i class="ti ti-cash"></i><span>Cash</span><small>Collect at counter</small></button>
+            <button class="pb" onclick="go('s-paid')"><i class="ti ti-credit-card"></i><span>Card</span><small>Debit or credit</small></button>
+            <button class="pb" onclick="go('s-paid')"><i class="ti ti-brand-google"></i><span>UPI</span><small>GPay, PhonePe</small></button>
+            <button class="pb" onclick="go('s-cashless')"><i class="ti ti-building-bank"></i><span>Cashless</span><small>Private insurance</small></button>
+            <button class="pb" onclick="go('s-pmjay')"><i class="ti ti-shield-check"></i><span>PMJAY</span><small>Ayushman Bharat</small></button>
+          </div>
+          <button class="btn bgh" onclick="go('s-out')">Mark as Outstanding</button>
+        </div>
+        <div class="card"><div class="sec-lbl">Patient</div><p style="font-size:15px;font-weight:600">Priya Desai</p><p style="font-size:12px;color:var(--g6);margin-top:2px">34 yrs · OPD · Gen. Medicine</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-cashless">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bil-sp')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Cashless Insurance</div></div></div>
+    <div class="content" style="max-width:700px"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Patient's insurer will settle directly with the hospital.</span></div><div class="card"><div class="form-row"><div class="ff"><span class="lbl">Insurer</span><select><option>Star Health</option><option>HDFC Ergo</option><option>New India Assurance</option></select></div><div class="ff"><span class="lbl">Policy number</span><input type="text" placeholder="Enter policy number"></div></div><div class="ff"><span class="lbl">Pre-auth reference</span><input type="text" placeholder="If available"></div><div class="card" style="background:var(--g1);margin:12px 0"><div style="font-size:13px;line-height:2.2"><div style="display:flex;justify-content:space-between"><span>Total bill</span><span style="font-weight:700">₹1,200</span></div><div style="display:flex;justify-content:space-between"><span>Insurance covers</span><span style="font-weight:700;color:var(--g)">₹1,000</span></div><div style="display:flex;justify-content:space-between"><span>Patient balance</span><span style="font-weight:700;color:var(--a)">₹200</span></div></div></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-cf')"><i class="ti ti-send"></i> Confirm and File Claim</button><button class="btn bgh" onclick="go('s-bil-sp')">Back</button></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-pmjay">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bil-sp')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">PMJAY Payment</div></div></div>
+    <div class="content" style="max-width:700px"><div class="bn bn-t"><i class="ti ti-info-circle"></i><span>Payment routed through PMJAY government scheme portal.</span></div><div class="card"><div class="form-row"><div class="ff"><span class="lbl">PMJAY card number</span><input type="text" placeholder="Enter PMJAY card number"></div><div class="ff"><span class="lbl">Amount to claim</span><input type="text" value="₹1,200"></div></div><div class="card" style="background:var(--g1);margin:12px 0"><div style="font-size:13px;line-height:2.2"><div style="display:flex;justify-content:space-between"><span>Beneficiary verified</span><span class="b bg">Verified</span></div><div style="display:flex;justify-content:space-between"><span>Annual limit remaining</span><span style="font-weight:700;color:var(--g)">₹4,20,000</span></div></div></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-cf')"><i class="ti ti-check"></i> Confirm and Submit</button><button class="btn bgh" onclick="go('s-bil-sp')">Back</button></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-out">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bil-sp')"><i class="ti ti-arrow-left"></i> Back</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Mark as Outstanding</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-a"><i class="ti ti-info-circle"></i><span>Patient will be discharged. Amount remains due. Appears in outstanding report.</span></div><div class="card"><div class="form-row"><div class="ff"><span class="lbl">Reason</span><input type="text" placeholder="e.g. Patient unable to pay today"></div><div class="ff"><span class="lbl">Follow-up date</span><input type="date"></div></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-paid')"><i class="ti ti-check"></i> Confirm and Discharge</button><button class="btn bgh" onclick="go('s-bil-sp')">Cancel</button></div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-paid">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bill')"><i class="ti ti-layout-dashboard"></i> Back to Billing</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Payment Collected</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Payment collected. Receipt sent via SMS.</span></div><div class="card"><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Patient</span><span style="font-weight:700">Priya Desai</span></div><div style="display:flex;justify-content:space-between"><span>Amount collected</span><span style="font-weight:700;color:var(--g)">₹1,200</span></div><div style="display:flex;justify-content:space-between"><span>Receipt</span><span style="font-weight:700">SH-2026-3341</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-bill')"><i class="ti ti-arrow-left"></i> Back to Billing</button></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-cf">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bill')"><i class="ti ti-layout-dashboard"></i> Back to Billing</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Claim Filed</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Claim filed via NHCX. Reference number generated.</span></div><div class="card"><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Claim reference</span><span style="font-weight:700">NHCX-2026-88421</span></div><div style="display:flex;justify-content:space-between"><span>Submitted to</span><span style="font-weight:700">Star Health TPA</span></div><div style="display:flex;justify-content:space-between"><span>Amount</span><span style="font-weight:700">₹42,800</span></div><div style="display:flex;justify-content:space-between"><span>Expected settlement</span><span style="font-weight:700">7–15 days</span></div></div></div><button class="btn bp" style="margin-top:16px" onclick="go('s-bill')"><i class="ti ti-arrow-left"></i> Back to Billing</button></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-rej">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-bill-claims')"><i class="ti ti-arrow-left"></i> Back to Claims</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">AK</div><div><div class="user-name">Anil Kumar</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Rejected Claim</div><div style="font-size:12px;color:var(--g6)">Meera Iyer · Star Health · ₹18,500</div></div></div>
+    <div class="content" style="max-width:800px">
+      <div class="bn bn-r"><i class="ti ti-alert-triangle"></i><span>Rejection reason: Missing post-operative nursing notes</span></div>
+      <div class="bn bn-t"><i class="ti ti-robot"></i><span>AI identified this as fixable. Upload the missing document to resubmit.</span></div>
+      <div class="grid-2-1">
+        <div class="card"><div class="sec-lbl">Required document</div><p style="font-size:14px;font-weight:600;margin-bottom:6px">Post-operative nursing notes — night shift 22 May</p><p style="font-size:13px;color:var(--g6)">Ward clerk has been notified to upload. Once uploaded, resubmission is one click.</p><div class="sep"></div><div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-cf')"><i class="ti ti-refresh"></i> Resubmit Claim</button><button class="btn bgh" onclick="go('s-bill-claims')">Escalate to Billing Head</button></div></div>
+        <div class="card"><div class="sec-lbl">Claim details</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Filed on</span><span>20 May 2026</span></div><div style="display:flex;justify-content:space-between"><span>Rejected on</span><span>24 May 2026</span></div><div style="display:flex;justify-content:space-between"><span>TPA</span><span>Star Health</span></div><div style="display:flex;justify-content:space-between"><span>Claim amount</span><span style="font-weight:700">₹18,500</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ ADMIN ══════════════════════════ -->
+<div class="sc" id="s-adm">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div><div class="sidebar-logo-sub">Sunrise Hospital</div></div><div class="sidebar-section">Administrator</div><div class="nav-item active"><i class="ti ti-layout-dashboard"></i> Dashboard</div><div class="nav-item" onclick="go('s-adm-reports')"><i class="ti ti-chart-bar"></i> Monthly Reports</div><div class="nav-item" onclick="go('s-adm-staff')"><i class="ti ti-users"></i> Staff Accounts</div><div class="nav-item" onclick="go('s-adm-setup')"><i class="ti ti-settings"></i> Hospital Setup</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">BM</div><div><div class="user-name">Dr. Bhagyashree</div><div class="user-role">Administrator</div></div></div><button onclick="go('s-roles')" style="margin-top:12px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:12px;font-family:var(--f)">Switch role</button></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Sunrise Hospital</div><div style="font-size:12px;color:var(--g6)">Daily operations · 26 May 2026</div></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num">42</div><div class="stat-lbl">Beds occupied</div></div><div class="stat-card"><div class="stat-num" style="color:var(--t)">18</div><div class="stat-lbl">Beds available</div></div><div class="stat-card"><div class="stat-num" style="color:var(--a)">24</div><div class="stat-lbl">OPD today</div></div><div class="stat-card"><div class="stat-num" style="color:var(--r)">3</div><div class="stat-lbl">Pending discharge</div></div></div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="sec-lbl">Bed occupancy by ward</div>
+          <div style="padding:4px 0">
+            <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">Ward A</span><div class="wbb"><div class="wbf" style="width:90%"></div></div><span style="font-size:12px;min-width:36px;text-align:right">9/10</span></div>
+            <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">Ward B</span><div class="wbb"><div class="wbf" style="width:80%"></div></div><span style="font-size:12px;min-width:36px;text-align:right">8/10</span></div>
+            <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">Ward C</span><div class="wbb"><div class="wbf" style="width:70%"></div></div><span style="font-size:12px;min-width:36px;text-align:right">7/10</span></div>
+            <div class="wb"><span style="font-size:12px;min-width:80px;color:var(--g6)">ICU</span><div class="wbb"><div class="wbf" style="width:100%;background:var(--r)"></div></div><span style="font-size:12px;min-width:36px;text-align:right;color:var(--r);font-weight:700">5/5</span></div>
+            <div class="wb" style="margin-bottom:0"><span style="font-size:12px;min-width:80px;color:var(--g6)">Emergency</span><div class="wbb"><div class="wbf" style="width:60%"></div></div><span style="font-size:12px;min-width:36px;text-align:right">3/5</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="sec-lbl">OPD queue by department</div>
+          <table class="table"><thead><tr><th>Department</th><th>Doctor</th><th>Waiting</th></tr></thead><tbody>
+            <tr><td>Cardiology</td><td>Dr. Mehta</td><td><span class="b bt">8</span></td></tr>
+            <tr><td>General Medicine</td><td>Dr. Patel</td><td><span class="b bt">6</span></td></tr>
+            <tr><td>Orthopaedics</td><td>Dr. Sharma</td><td><span class="b bx">4</span></td></tr>
+          </tbody></table>
+        </div>
+        <div class="card">
+          <div class="sec-lbl">Pending tasks by role</div>
+          <table class="table"><tbody>
+            <tr><td>Billing</td><td style="text-align:right"><span class="b ba">5 claims unsent</span></td></tr>
+            <tr><td>Lab</td><td style="text-align:right"><span class="b ba">3 results pending</span></td></tr>
+            <tr><td>Pharmacy</td><td style="text-align:right"><span class="b bg">All clear</span></td></tr>
+            <tr><td>Ward Clerk</td><td style="text-align:right"><span class="b bg">All clear</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card">
+          <div class="sec-lbl">MLC and DAMA active cases</div>
+          <table class="table"><thead><tr><th>Patient</th><th>Type</th><th>Status</th></tr></thead><tbody>
+            <tr><td><b>Unknown patient</b><div class="card-sub">Emergency · Police intimation pending</div></td><td>MLC</td><td><span class="b br">Action needed</span></td></tr>
+            <tr><td><b>Suresh Kumar</b><div class="card-sub">Ward A · Form signed</div></td><td>DAMA</td><td><span class="b bx">Closed</span></td></tr>
+          </tbody></table>
+        </div>
+        <div class="card">
+          <div class="sec-lbl">Staff online now</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="text-align:center"><div class="user-av" style="margin:0 auto 4px">SM</div><div style="font-size:12px;color:var(--ink)">Dr. Mehta</div><div style="font-size:11px;color:var(--g6)">Doctor</div></div>
+            <div style="text-align:center"><div class="user-av" style="margin:0 auto 4px">KN</div><div style="font-size:12px;color:var(--ink)">Kavita</div><div style="font-size:11px;color:var(--g6)">Nurse</div></div>
+            <div style="text-align:center"><div class="user-av" style="margin:0 auto 4px">RS</div><div style="font-size:12px;color:var(--ink)">Ritu</div><div style="font-size:11px;color:var(--g6)">Reception</div></div>
+            <div style="text-align:center"><div class="user-av" style="margin:0 auto 4px">PM</div><div style="font-size:12px;color:var(--ink)">Pooja</div><div style="font-size:11px;color:var(--g6)">Pharmacy</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-adm-reports">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="sidebar-section">Administrator</div><div class="nav-item" onclick="go('s-adm')"><i class="ti ti-layout-dashboard"></i> Dashboard</div><div class="nav-item active"><i class="ti ti-chart-bar"></i> Monthly Reports</div><div class="nav-item" onclick="go('s-adm-staff')"><i class="ti ti-users"></i> Staff Accounts</div><div class="nav-item" onclick="go('s-adm-setup')"><i class="ti ti-settings"></i> Hospital Setup</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">BM</div><div><div class="user-name">Dr. Bhagyashree</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Monthly Reports</div><div style="font-size:12px;color:var(--g6)">May 2026</div></div></div>
+    <div class="content">
+      <div class="grid-4" style="margin-bottom:24px"><div class="stat-card"><div class="stat-num">₹18.4L</div><div class="stat-lbl">Total billing</div></div><div class="stat-card"><div class="stat-num" style="color:var(--g)">₹12.1L</div><div class="stat-lbl">Collected</div></div><div class="stat-card"><div class="stat-num" style="color:var(--a)">₹4.8L</div><div class="stat-lbl">Insurance pending</div></div><div class="stat-card"><div class="stat-num" style="color:var(--r)">₹1.5L</div><div class="stat-lbl">Outstanding</div></div></div>
+      <div class="grid-3">
+        <div class="card"><div class="sec-lbl">Claims this month</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Filed</span><span style="font-weight:700">84</span></div><div style="display:flex;justify-content:space-between"><span>Approved</span><span style="font-weight:700;color:var(--g)">71</span></div><div style="display:flex;justify-content:space-between"><span>Under review</span><span style="font-weight:700;color:var(--a)">8</span></div><div style="display:flex;justify-content:space-between"><span>Rejected</span><span style="font-weight:700;color:var(--r)">5</span></div></div></div>
+        <div class="card"><div class="sec-lbl">Operational metrics</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Bed occupancy</span><span style="font-weight:700">74%</span></div><div style="display:flex;justify-content:space-between"><span>Avg stay</span><span style="font-weight:700">4.2 days</span></div><div style="display:flex;justify-content:space-between"><span>Avg discharge time</span><span style="font-weight:700">1h 48m</span></div><div style="display:flex;justify-content:space-between"><span>Patients this month</span><span style="font-weight:700">312</span></div></div></div>
+        <div class="card"><div class="sec-lbl">TPA rejection rates</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>Star Health</span><span style="color:var(--g);font-weight:700">2.1%</span></div><div style="display:flex;justify-content:space-between"><span>New India</span><span style="color:var(--a);font-weight:700">6.4%</span></div><div style="display:flex;justify-content:space-between"><span>HDFC Ergo</span><span style="color:var(--g);font-weight:700">1.8%</span></div><div style="display:flex;justify-content:space-between"><span>PMJAY</span><span style="color:var(--g);font-weight:700">0.9%</span></div></div></div>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <div class="card"><div class="sec-lbl">Doctor-wise patients</div><table class="table"><thead><tr><th>Doctor</th><th>Department</th><th>Patients</th></tr></thead><tbody><tr><td>Dr. Mehta</td><td>Cardiology</td><td style="font-weight:700">94</td></tr><tr><td>Dr. Patel</td><td>Gen. Medicine</td><td style="font-weight:700">112</td></tr><tr><td>Dr. Sharma</td><td>Orthopaedics</td><td style="font-weight:700">67</td></tr></tbody></table></div>
+        <div class="card"><div class="sec-lbl">NABH compliance</div><div style="font-size:13px;line-height:2.5"><div style="display:flex;justify-content:space-between"><span>ABDM integration</span><span class="b bg">Active</span></div><div style="display:flex;justify-content:space-between"><span>NHCX claims filing</span><span class="b bg">Active</span></div><div style="display:flex;justify-content:space-between"><span>DPDP data audit</span><span class="b bg">Compliant</span></div><div style="display:flex;justify-content:space-between"><span>NABH documentation</span><span class="b ba">2 items pending</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-adm-staff">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="sidebar-section">Administrator</div><div class="nav-item" onclick="go('s-adm')"><i class="ti ti-layout-dashboard"></i> Dashboard</div><div class="nav-item" onclick="go('s-adm-reports')"><i class="ti ti-chart-bar"></i> Monthly Reports</div><div class="nav-item active"><i class="ti ti-users"></i> Staff Accounts</div><div class="nav-item" onclick="go('s-adm-setup')"><i class="ti ti-settings"></i> Hospital Setup</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">BM</div><div><div class="user-name">Dr. Bhagyashree</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Staff Accounts</div></div><div class="topbar-actions"><button class="btn bp" onclick="go('s-add-s')"><i class="ti ti-plus"></i> Add Staff Account</button></div></div>
+    <div class="content">
+      <div class="card"><table class="table"><thead><tr><th>Name</th><th>Role</th><th>Department/Ward</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+        <tr><td><b>Dr. Suresh Mehta</b></td><td>Doctor</td><td>Cardiology · Full-time</td><td><span class="b bg">Online</span></td><td><button class="btn bsm bgh">Reset password</button></td></tr>
+        <tr><td><b>Kavita Nair</b></td><td>Nurse</td><td>Ward B</td><td><span class="b bg">Online</span></td><td><button class="btn bsm bgh">Reset password</button></td></tr>
+        <tr><td><b>Ritu Shah</b></td><td>Receptionist</td><td>Reception</td><td><span class="b bg">Online</span></td><td><button class="btn bsm bgh">Reset password</button></td></tr>
+        <tr><td><b>Anil Kumar</b></td><td>Billing team</td><td>Billing</td><td><span class="b bx">Offline</span></td><td><button class="btn bsm bgh">Reset password</button></td></tr>
+        <tr><td><b>Pooja Mishra</b></td><td>Pharmacist</td><td>Pharmacy</td><td><span class="b bg">Online</span></td><td><button class="btn bsm bgh">Reset password</button></td></tr>
+        <tr><td><b>Ravi Kumar</b></td><td>Lab technician</td><td>Lab and Radiology</td><td><span class="b bg">Online</span></td><td><button class="btn bsm bgh">Reset password</button></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-add-s">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-adm-staff')"><i class="ti ti-arrow-left"></i> Back to Staff</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">BM</div><div><div class="user-name">Dr. Bhagyashree</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Add Staff Account</div></div></div>
+    <div class="content" style="max-width:700px">
+      <div class="bn bn-a"><i class="ti ti-info-circle"></i><span>A temporary password will be sent to the staff member's mobile via SMS. They must change it on first login.</span></div>
+      <div class="card">
+        <div class="form-row"><div class="ff"><span class="lbl">Full name</span><input type="text" placeholder="Staff member's name"></div><div class="ff"><span class="lbl">Mobile number</span><input type="tel" placeholder="10-digit mobile"></div></div>
+        <div class="form-row"><div class="ff"><span class="lbl">Role</span><select id="rsel" onchange="tgDoc(this.value)"><option>Select role</option><option value="doctor">Doctor</option><option value="nurse">Nurse</option><option value="receptionist">Receptionist</option><option value="billing">Billing team</option><option value="pharmacy">Pharmacist</option><option value="lab">Lab technician</option><option value="ward_clerk">Ward clerk</option></select></div><div class="ff"><span class="lbl">Ward (if applicable)</span><select><option value="">Not applicable</option><option>Ward A</option><option>Ward B</option><option>Ward C</option><option>ICU</option></select></div></div>
+        <div id="docf" style="display:none"><div class="form-row"><div class="ff"><span class="lbl">Department</span><select><option>General Medicine</option><option>Cardiology</option><option>Orthopaedics</option><option>Surgery</option></select></div><div class="ff"><span class="lbl">Doctor type</span><select><option>Full-time</option><option>Visiting consultant</option></select></div></div></div>
+        <div style="display:flex;gap:8px"><button class="btn bp" onclick="go('s-sadd')"><i class="ti ti-check"></i> Create Account and Send SMS</button><button class="btn bgh" onclick="go('s-adm-staff')">Cancel</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-sadd">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-adm-staff')"><i class="ti ti-users"></i> Back to Staff</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">BM</div><div><div class="user-name">Dr. Bhagyashree</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Account Created</div></div></div>
+    <div class="content" style="max-width:600px"><div class="bn bn-g"><i class="ti ti-circle-check"></i><span>Account created. Temporary password sent via SMS. Staff can log in immediately.</span></div><div style="display:flex;gap:8px"><button class="btn bgh" onclick="go('s-add-s')"><i class="ti ti-plus"></i> Add Another</button><button class="btn bp" onclick="go('s-adm-staff')"><i class="ti ti-arrow-left"></i> Back to Staff</button></div></div>
+  </div>
+</div>
+</div>
+
+<div class="sc" id="s-adm-setup">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="sidebar-section">Administrator</div><div class="nav-item" onclick="go('s-adm')"><i class="ti ti-layout-dashboard"></i> Dashboard</div><div class="nav-item" onclick="go('s-adm-reports')"><i class="ti ti-chart-bar"></i> Monthly Reports</div><div class="nav-item" onclick="go('s-adm-staff')"><i class="ti ti-users"></i> Staff Accounts</div><div class="nav-item active"><i class="ti ti-settings"></i> Hospital Setup</div><div class="sidebar-bottom"><div class="sidebar-user"><div class="user-av">BM</div><div><div class="user-name">Dr. Bhagyashree</div></div></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Hospital Setup</div></div></div>
+    <div class="content">
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="sec-lbl">Hospital Profile</div>
+            <div class="form-row"><div class="ff"><span class="lbl">Hospital name</span><input type="text" value="Sunrise Hospital"></div><div class="ff"><span class="lbl">Registration number</span><input type="text" value="MH-2019-4521"></div></div>
+            <div class="form-row"><div class="ff"><span class="lbl">City</span><input type="text" value="Pune, Maharashtra"></div><div class="ff"><span class="lbl">Total beds</span><input type="number" value="60"></div></div>
+            <div class="ff"><span class="lbl">NABH status</span><select><option>Accredited</option><option>Applied</option><option>Not applied</option></select></div>
+            <button class="btn bp"><i class="ti ti-check"></i> Save Profile</button>
+          </div>
+          <div class="card">
+            <div class="sec-lbl">Departments Active</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><span class="b bt" style="padding:5px 12px">General Medicine</span><span class="b bt" style="padding:5px 12px">Cardiology</span><span class="b bt" style="padding:5px 12px">Orthopaedics</span><span class="b bt" style="padding:5px 12px">Gynaecology</span><span class="b bt" style="padding:5px 12px">Surgery</span></div>
+            <button class="btn bgh bsm"><i class="ti ti-plus"></i> Add Department</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>Wards and Beds</h3><button class="btn bgh bsm"><i class="ti ti-plus"></i> Add Ward</button></div>
+          <p style="font-size:12px;color:var(--g6);margin-bottom:12px">Admin creates wards. Bed numbers are auto-generated (Ward A → A-01, A-02...)</p>
+          <table class="table"><thead><tr><th>Ward</th><th>Type</th><th>Beds</th><th>Generated</th></tr></thead><tbody>
+            <tr><td><b>Ward A</b></td><td>General</td><td>10</td><td style="font-size:12px;color:var(--g6)">A-01 to A-10</td></tr>
+            <tr><td><b>Ward B</b></td><td>General</td><td>10</td><td style="font-size:12px;color:var(--g6)">B-01 to B-10</td></tr>
+            <tr><td><b>Ward C</b></td><td>Semi-private</td><td>10</td><td style="font-size:12px;color:var(--g6)">C-01 to C-10</td></tr>
+            <tr><td><b>ICU</b></td><td>ICU</td><td>5</td><td style="font-size:12px;color:var(--g6)">ICU-01 to ICU-05</td></tr>
+            <tr><td><b>Emergency</b></td><td>Emergency</td><td>5</td><td style="font-size:12px;color:var(--g6)">E-01 to E-05</td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════ WHATSAPP ══════════════════════════ -->
+<div class="sc" id="s-wa">
+<div class="desktop">
+  <div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-name">Praano</div></div><div class="nav-item" onclick="go('s-roles')"><i class="ti ti-arrow-left"></i> Back to Roles</div><div class="sidebar-bottom"><div style="padding:12px 0"><p style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.6">Patient WhatsApp flow. No login required. All messages sent automatically from Praano.</p></div></div></div>
+  <div class="main">
+    <div class="topbar"><div><div class="topbar-title">Patient WhatsApp — 30-Day Follow-up</div><div style="font-size:12px;color:var(--g6)">Messages sent automatically · No patient login required</div></div><div class="topbar-actions"><button class="tab on" onclick="swW('h',this)" id="wh" style="cursor:pointer;padding:6px 14px;border-radius:8px;background:var(--tl);color:var(--td);border:1px solid var(--tl);font-family:var(--f);font-size:13px;font-weight:600">Hindi</button><button class="tab" onclick="swW('g',this)" id="wg" style="cursor:pointer;padding:6px 14px;border-radius:8px;background:var(--g1);color:var(--g6);border:1px solid var(--g2);font-family:var(--f);font-size:13px;font-weight:600">Gujarati</button><button class="tab" onclick="swW('e',this)" id="we" style="cursor:pointer;padding:6px 14px;border-radius:8px;background:var(--g1);color:var(--g6);border:1px solid var(--g2);font-family:var(--f);font-size:13px;font-weight:600">English</button></div></div>
+    <div style="display:flex;flex:1">
+      <div style="width:300px;background:var(--g1);border-right:1px solid var(--g2);padding:20px;flex-shrink:0">
+        <div class="sec-lbl">Message Schedule</div>
+        <div style="font-size:13px;line-height:2.5;color:var(--g6)"><div style="display:flex;justify-content:space-between;color:var(--ink);font-weight:600"><span>Discharge day</span><span class="b bg">Sent</span></div><div style="display:flex;justify-content:space-between"><span>Day 1</span><span class="b bg">Sent</span></div><div style="display:flex;justify-content:space-between"><span>Day 3</span><span class="b ba">Scheduled</span></div><div style="display:flex;justify-content:space-between"><span>Day 7</span><span class="b ba">Scheduled</span></div><div style="display:flex;justify-content:space-between"><span>Day before appt</span><span class="b ba">Scheduled</span></div><div style="display:flex;justify-content:space-between"><span>Day 30</span><span class="b ba">Scheduled</span></div></div>
+        <div class="sep"></div>
+        <div class="sec-lbl">Sent to</div>
+        <p style="font-size:13px;color:var(--ink);font-weight:600">Ramesh Sharma</p>
+        <p style="font-size:12px;color:var(--g6)">9876543210</p>
+        <p style="font-size:12px;color:var(--g6);margin-top:4px">Family contact also receives a copy</p>
+      </div>
+      <div style="flex:1">
+        <div class="wa-hd"><div class="wa-av">SH</div><div style="margin-left:10px"><p style="font-size:14px;font-weight:700;color:white">Sunrise Hospital</p><p style="font-size:11px;color:rgba(255,255,255,.7)">Praano Health · Official updates</p></div></div>
+        <div class="wa-bg" style="max-height:600px;overflow-y:auto">
+          <div id="wh-c">
+            <div class="dlbl"><span class="dchip">छुट्टी का दिन</span></div>
+            <div style="margin-bottom:14px"><div class="msg">नमस्ते रमेश जी,<br><br>आपको Sunrise Hospital से छुट्टी मिल गई है।<br><br>दवाइयाँ:<br>— Amlodipine 5mg — सुबह खाने के बाद<br>— Atorvastatin 20mg — रात को सोने से पहले<br>— Metformin 500mg — सुबह और शाम खाने के साथ<br><br>अगली मुलाकात: 9 जून 2026, सुबह 10 बजे, Dr. Mehta, Sunrise Hospital<br><br>किसी भी परेशानी के लिए: 020-2456-7890<span class="mt">3:42 PM</span></div></div>
+            <div class="dlbl"><span class="dchip">दिन 1</span></div>
+            <div style="margin-bottom:14px"><div class="msg">नमस्ते रमेश जी, आपको घर आए एक दिन हो गया है। उम्मीद है आप ठीक हैं। अपनी दवाइयाँ नियमित रूप से लेते रहें। — Sunrise Hospital<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">दिन 3</span></div>
+            <div style="margin-bottom:14px"><div class="msg">नमस्ते रमेश जी, क्या आप अपनी सभी दवाइयाँ ले रहे हैं? दवाइयाँ बंद न करें। कोई तकलीफ हो तो: 020-2456-7890<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">दिन 7</span></div>
+            <div style="margin-bottom:14px"><div class="msg">नमस्ते रमेश जी,<br><br>आपकी अगली मुलाकात:<br>तारीख: 9 जून 2026 · समय: सुबह 10:00 बजे<br>डॉक्टर: Dr. Mehta · Sunrise Hospital, OPD - Cardiology<br><br>पुराने रिपोर्ट साथ लाएं।<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">अपॉइंटमेंट से एक दिन पहले</span></div>
+            <div style="margin-bottom:14px"><div class="msg">नमस्ते रमेश जी, कल Dr. Mehta से मुलाकात है — 9 जून, सुबह 10 बजे, Sunrise Hospital। दवाइयाँ और रिपोर्ट साथ लाएं।<span class="mt">6:00 PM</span></div></div>
+            <div class="dlbl"><span class="dchip">दिन 30</span></div>
+            <div style="margin-bottom:14px"><div class="msg">नमस्ते रमेश जी, छुट्टी को एक महीना हो गया। उम्मीद है अच्छे हैं। कोई तकलीफ हो: 020-2456-7890 — Sunrise Hospital<span class="mt">10:00 AM</span></div></div>
+          </div>
+          <div id="wg-c" style="display:none">
+            <div class="dlbl"><span class="dchip">રજા નો દિવસ</span></div>
+            <div style="margin-bottom:14px"><div class="msg">નમસ્તે રમેશભાઈ,<br><br>તમને Sunrise Hospital માંથી રજા મળી છે।<br><br>દવાઓ:<br>— Amlodipine 5mg — સવારે જમ્યા પછી<br>— Atorvastatin 20mg — રાત્રે સૂતા પહેલા<br>— Metformin 500mg — સવારે અને સાંજે<br><br>આગળ ની મુલાકાત: 9 જૂન 2026, સવારે 10 વાગ્યે, Dr. Mehta<br><br>020-2456-7890<span class="mt">3:42 PM</span></div></div>
+            <div class="dlbl"><span class="dchip">દિવસ 1</span></div>
+            <div style="margin-bottom:14px"><div class="msg">નમસ્તે રમેશભાઈ, ઘરે આવ્યાને એક દિવસ. દવાઓ નિયમિત લેતા રહો. — Sunrise Hospital<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">દિવસ 7</span></div>
+            <div style="margin-bottom:14px"><div class="msg">નમસ્તે રમેશભાઈ, આગળ ની મુલાકાત: 9 જૂન 2026, સવારે 10 વાગ્યે, Dr. Mehta, Sunrise Hospital, OPD. જૂના રિપોર્ટ સાથે લાવો.<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">દિવસ 30</span></div>
+            <div style="margin-bottom:14px"><div class="msg">નમસ્તે રમેશભાઈ, રજા ને એક મહિનો. આશા છે સ્વસ્થ છો. 020-2456-7890 — Sunrise Hospital<span class="mt">10:00 AM</span></div></div>
+          </div>
+          <div id="we-c" style="display:none">
+            <div class="dlbl"><span class="dchip">Discharge day</span></div>
+            <div style="margin-bottom:14px"><div class="msg">Dear Ramesh,<br><br>You have been discharged from Sunrise Hospital.<br><br>Medicines:<br>— Amlodipine 5mg — morning after food<br>— Atorvastatin 20mg — night before sleep<br>— Metformin 500mg — morning and evening with food<br><br>Follow-up: 9 June 2026, 10:00 AM, Dr. Mehta, Sunrise Hospital, OPD<br><br>For any concern: 020-2456-7890<span class="mt">3:42 PM</span></div></div>
+            <div class="dlbl"><span class="dchip">Day 1</span></div>
+            <div style="margin-bottom:14px"><div class="msg">Dear Ramesh, one day since discharge. Please continue taking your medicines regularly. — Sunrise Hospital<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">Day 7</span></div>
+            <div style="margin-bottom:14px"><div class="msg">Dear Ramesh, follow-up reminder: 9 June 2026, 10:00 AM, Dr. Mehta, Sunrise Hospital, OPD. Please bring your previous reports.<span class="mt">10:00 AM</span></div></div>
+            <div class="dlbl"><span class="dchip">Day 30</span></div>
+            <div style="margin-bottom:14px"><div class="msg">Dear Ramesh, one month since discharge. We hope you are well. For any concern: 020-2456-7890 — Sunrise Hospital<span class="mt">10:00 AM</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- end #app -->
+
+<script>
+function go(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  var el=document.getElementById(id);
+  if(el){el.classList.add('on');window.scrollTo(0,0)}
+}
+function chkM(v){var c=v.replace(/\D/g,'');var b=document.getElementById('sbtn');b.disabled=c.length<10;b.style.opacity=c.length<10?'.4':'1'}
+function doS(){var v=document.getElementById('mob').value.replace(/\D/g,'');go(v==='9876543210'?'s-ret':'s-new')}
+function tgI(v){document.getElementById('pol').style.display=v==='s'?'none':'block'}
+function tgR(el){el.classList.toggle('ck');el.innerHTML=el.classList.contains('ck')?'<i class="ti ti-check" style="font-size:10px"></i>':''}
+function tgDoc(v){document.getElementById('docf').style.display=v==='doctor'?'block':'none'}
+function swP(t,btn){['w','d','i'].forEach(id=>{var el=document.getElementById('p'+id);if(el)el.style.display='none'});var el=document.getElementById('p'+t);if(el)el.style.display='block';document.querySelectorAll('#s-pharm .tab').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on')}
+function swL(t,btn){['p','d'].forEach(id=>{var el=document.getElementById('l'+id);if(el)el.style.display='none'});var el=document.getElementById('l'+t);if(el)el.style.display='block';document.querySelectorAll('#s-lab .tab').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on')}
+function swB(t,btn){['p2','c2'].forEach(id=>{var el=document.getElementById('b'+id);if(el)el.style.display='none'});var el=document.getElementById('b'+t+'2');if(el)el.style.display='block';document.querySelectorAll('#s-bill .tab').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on')}
+function swBI(t,btn){['b','s','c'].forEach(id=>{var el=document.getElementById('bi'+id);if(el)el.style.display='none'});var el=document.getElementById('bi'+t);if(el)el.style.display='block';document.querySelectorAll('#s-bil-ins .tab').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');else{document.querySelectorAll('#s-bil-ins .tab').forEach((b,i)=>{if(i==2)b.classList.add('on')})}}
+function swW(l,btn){['h','g','e'].forEach(id=>{var el=document.getElementById('w'+id+'-c');if(el)el.style.display='none'});var el=document.getElementById('w'+l+'-c');if(el)el.style.display='block';['wh','wg','we'].forEach(id=>{var b=document.getElementById(id);if(b){b.style.background='var(--g1)';b.style.color='var(--g6)';b.style.borderColor='var(--g2)'}});var ab=document.getElementById('w'+l);if(ab){ab.style.background='var(--tl)';ab.style.color='var(--td)';ab.style.borderColor='var(--tl)'}}
+</script>
+</body>
+</html>
