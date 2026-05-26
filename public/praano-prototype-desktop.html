@@ -231,6 +231,118 @@ textarea{resize:none;line-height:1.5}
 
 /* SEPARATOR */
 .sep{height:1px;background:var(--g2);margin:16px 0}
+
+/* ══════════════════════════ MOBILE ══════════════════════════ */
+@media (max-width: 900px){
+  html,body{font-size:13px}
+
+  /* Layout: stack sidebar above main */
+  .desktop{flex-direction:column}
+  .sidebar{position:static;width:100%;height:auto;min-height:auto;flex-direction:column;border-bottom:1px solid rgba(255,255,255,.08)}
+  .sidebar-logo{padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+  .sidebar-logo-name{font-size:18px}
+  .sidebar-logo-sub{display:inline;margin-top:0;margin-left:6px;font-size:10px}
+  .sidebar-section{padding:10px 16px 4px;font-size:9px}
+  .nav-item{margin:1px 8px;padding:8px 10px;font-size:12px}
+  .nav-item i{font-size:14px}
+  .sidebar-bottom{padding:10px 16px;margin-top:0;border-top:1px solid rgba(255,255,255,.08)}
+  .user-av{width:28px;height:28px;font-size:11px}
+  .user-name{font-size:12px}
+  .user-role{font-size:10px}
+
+  .main{margin-left:0;width:100%}
+  .topbar{padding:10px 14px;height:auto;min-height:54px;flex-wrap:wrap;gap:8px}
+  .topbar-title{font-size:15px}
+  .topbar-sub{font-size:11px}
+  .topbar-actions{flex-wrap:wrap;gap:6px}
+  .content{padding:14px}
+
+  /* Buttons - tap-friendly */
+  .btn{padding:9px 14px;font-size:13px}
+  .bsm{padding:6px 10px;font-size:12px}
+
+  /* Grids collapse */
+  .grid-3,.grid-2,.grid-2-1,.grid-1-2{grid-template-columns:1fr;gap:12px}
+  .grid-4{grid-template-columns:repeat(2,1fr);gap:10px}
+  .form-row,.form-row-3{grid-template-columns:1fr;gap:10px}
+
+  /* Cards */
+  .card{padding:14px;border-radius:10px}
+  .stat-card{padding:14px}
+  .stat-num{font-size:22px}
+  .stat-lbl{font-size:11px}
+
+  /* Tables: horizontal scroll inside cards */
+  .card>.table,.card>div>.table{display:block;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  .table{font-size:12px}
+  .table th{padding:8px 10px;font-size:10px}
+  .table td{padding:9px 10px;font-size:12px}
+
+  /* Login */
+  .login-card{width:auto;max-width:380px;padding:32px 24px;margin:16px}
+  .login-logo{font-size:28px}
+
+  /* Role select: 2 cols */
+  .role-grid{grid-template-columns:repeat(2,1fr);gap:12px;max-width:100%}
+  .role-card{padding:20px 12px}
+  .role-card i{font-size:24px;margin-bottom:6px}
+  .role-card span{font-size:13px}
+
+  /* Payment grid: 2 cols */
+  .pgrid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .pb{padding:14px 10px}
+  .pb i{font-size:22px}
+  .pb span{font-size:12px}
+
+  /* Tabs scroll */
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;flex-wrap:nowrap}
+  .tab{padding:8px 14px;font-size:12px;flex-shrink:0}
+
+  .bn{padding:10px 12px;font-size:12px}
+
+  .tok{min-width:34px;height:34px;font-size:11px}
+  .pt-av{width:30px;height:30px;font-size:11px}
+
+  /* Vitals 4-col/3-col inline grids -> 2 cols */
+  .card div[style*="grid-template-columns:repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr) !important}
+  .card div[style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:repeat(2,1fr) !important}
+
+  .notif-btn{font-size:18px}
+
+  /* WhatsApp screen: stack schedule above chat */
+  #s-wa .main>div[style*="display:flex"][style*="flex:1"]{flex-direction:column}
+  #s-wa div[style*="width:300px"]{width:100% !important;border-right:none !important;border-bottom:1px solid var(--g2);padding:14px !important}
+  .wa-bg{max-height:none !important;padding:12px}
+  .msg{max-width:88%;font-size:12px}
+
+  /* Inline max-width content - fit screen */
+  .content[style*="max-width"]{max-width:100% !important}
+
+  /* Prevent iOS input zoom */
+  input,select,textarea{font-size:16px}
+  .lbl{font-size:11px}
+
+  .sidebar-bottom button{font-size:11px}
+  .card-header{flex-wrap:wrap;gap:8px}
+
+  /* Inline 80px circle (voice listening) shrink */
+  .card div[style*="width:80px;height:80px"]{width:64px !important;height:64px !important}
+
+  /* Inline two-side flex headers wrap */
+  .card div[style*="display:flex"][style*="justify-content:space-between"][style*="align-items:flex-start"]{flex-wrap:wrap;gap:8px}
+}
+
+@media (max-width: 480px){
+  .content{padding:12px}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .topbar-actions{width:100%}
+  .topbar-actions .btn{flex:1;min-width:0;justify-content:center}
+  .stat-num{font-size:20px}
+  .nav-item{padding:7px 10px;font-size:12px}
+  .login-card{padding:28px 20px}
+  .role-card{padding:18px 10px}
+  .pgrid{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
